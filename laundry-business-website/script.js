@@ -169,6 +169,44 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // ==========================================
+    // LIVE LOCATION FETCHING
+    // ==========================================
+    const locationWidget = document.getElementById('location-widget');
+    const locationText = document.getElementById('location-text');
+    const locationSubtext = document.getElementById('location-subtext');
+
+    locationWidget.addEventListener('click', () => {
+        if (!("geolocation" in navigator)) {
+            locationSubtext.innerText = "Geolocation not supported";
+            return;
+        }
+
+        locationText.innerText = "Locating...";
+        locationSubtext.innerText = "Please allow access";
+
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            try {
+                const { latitude, longitude } = position.coords;
+                // Free reverse geocoding via OpenStreetMap (No API key needed)
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+                const data = await response.json();
+                
+                // Extract the most accurate local area name
+                const city = data.address.city || data.address.town || data.address.suburb || data.address.state_district || "Your Location";
+                
+                locationText.innerText = city;
+                locationSubtext.innerText = "Service available in your area";
+            } catch (error) {
+                locationText.innerText = "Location Error";
+                locationSubtext.innerText = "Could not fetch city";
+            }
+        }, (error) => {
+            locationText.innerText = "Current Location";
+            locationSubtext.innerText = "Permission denied";
+        });
+    });
+
     // Smooth scrolling for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
