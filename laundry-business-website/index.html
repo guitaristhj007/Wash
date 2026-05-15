@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreshWash | Premium Laundry Service</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+<!-- Preloader Animation -->
+<div id="preloader">
+    <div class="animation-stage">
+        <div class="drop-container">
+            <div class="drop"></div>
+        </div>
+        <div class="ripple"></div>
+        
+        <div class="wm-wrapper" id="wm-wrapper">
+            <div class="wm">
+                <div class="wm-top">
+                    <div class="wm-dot active"></div>
+                    <div class="wm-dot"></div>
+                    <div class="wm-dot"></div>
+                </div>
+                <div class="wm-door-outer">
+                    <div class="wm-drum" id="drum">
+                        <div class="wm-water"></div>
+                        <div class="wm-clothes-container">
+                            <svg class="cloth shirt" viewBox="0 0 24 24" fill="#F472B6" stroke="none"><path d="M20.38 3.46L16 2a8.59 8.59 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
+                            <svg class="cloth pant" viewBox="0 0 24 24" fill="#3B82F6" stroke="none"><path d="M5 3h14v2H5z"/><path d="M5 5h14l-2 16h-4l-1-8-1 8H7L5 5z"/></svg>
+                            <svg class="cloth skirt" viewBox="0 0 24 24" fill="#A78BFA" stroke="none"><path d="M8 3h8l4 18H4L8 3z"/></svg>
+                            <svg class="cloth sock" viewBox="0 0 24 24" fill="#818CF8" stroke="none"><path d="M10 2v10.5a5.5 5.5 0 0 0 11 0V11h-4v1.5a1.5 1.5 0 0 1-3 0V2z"/><path d="M14 2h-4"/></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wm-glow"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Auth Section -->
+<div id="auth-section" class="hidden">
+    <div class="auth-card">
+        <div class="auth-header">
+            <i data-lucide="waves" class="auth-logo-icon"></i>
+            <h2>Welcome to FreshWash</h2>
+            <p>Log in or sign up to schedule your pickup</p>
+        </div>
+        
+        <button class="google-auth-btn" id="google-btn">
+            <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
+            Continue with Google
+        </button>
+        
+        <div class="auth-divider">
+            <span>or</span>
+        </div>
+        
+        <div class="otp-auth" id="otp-auth-section">
+            <label>Phone Number</label>
+            <div class="phone-input">
+                <span class="country-code">+91</span>
+                <input type="tel" placeholder="Enter your number" id="phone-input">
+            </div>
+            <div id="recaptcha-container" style="margin-bottom: 15px;"></div>
+            <button class="cta-button primary full-width" id="send-otp-btn">Send OTP</button>
+        </div>
+        
+        <div class="otp-verify hidden" id="otp-verify-section">
+            <label>Enter OTP sent to your phone</label>
+            <div class="otp-inputs">
+                <input type="text" maxlength="1">
+                <input type="text" maxlength="1">
+                <input type="text" maxlength="1">
+                <input type="text" maxlength="1">
+                <input type="text" maxlength="1">
+                <input type="text" maxlength="1">
+            </div>
+            <button class="cta-button primary full-width" id="verify-otp-btn">Verify & Login</button>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div id="main-content" class="hidden">
+    <nav class="navbar">
+        <div class="nav-left">
+            <div class="logo">
+                <i data-lucide="waves" class="logo-icon"></i>
+                FreshWash
+            </div>
+            <div class="location-widget" id="location-widget">
+                <div class="location-header">
+                    <span id="location-text">Current Location</span>
+                    <i data-lucide="chevron-down" class="location-icon"></i>
+                </div>
+                <div class="location-subtext" id="location-subtext">Click to fetch location</div>
+            </div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#services">Services</a></li>
+            <li><a href="#how-it-works">How it Works</a></li>
+        </ul>
+        <button class="cta-button nav-cta">Book Pickup</button>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-container">
+            <div class="hero-text">
+                <div class="badge">✨ Redefining Clean</div>
+                <h1>Immaculate Laundry.<br><span class="gradient-text">Zero Effort.</span></h1>
+                <p>We bring the luxury of a pristine wardrobe directly to your door. Experience the finest garment care with absolute convenience.</p>
+                <div class="hero-buttons">
+                    <button class="cta-button primary">Schedule Pickup <i data-lucide="arrow-right"></i></button>
+                    <button class="cta-button secondary">View Pricing</button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="image-wrapper">
+                    <div class="hero-image" style="background-image: url('hero-bg.png');"></div>
+                    <div class="floating-card">
+                        <div class="card-icon"><i data-lucide="clock"></i></div>
+                        <div class="card-text">
+                            <h4>24h Turnaround</h4>
+                            <p>Fresh & clean guaranteed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="services" class="services">
+        <div class="section-header">
+            <h2 class="title">Our Services</h2>
+            <p class="subtitle">Tailored care for every fabric in your wardrobe.</p>
+        </div>
+        <div class="service-grid">
+            <div class="service-card">
+                <div class="icon-wrapper">
+                    <i data-lucide="shirt" class="service-icon"></i>
+                </div>
+                <h3>Wash & Fold</h3>
+                <p>Everyday laundry, meticulously washed, perfectly dried, and neatly folded.</p>
+            </div>
+            <div class="service-card">
+                <div class="icon-wrapper">
+                    <i data-lucide="sparkles" class="service-icon"></i>
+                </div>
+                <h3>Dry Cleaning</h3>
+                <p>Expert stain removal and gentle cleaning for your most delicate garments.</p>
+            </div>
+            <div class="service-card">
+                <div class="icon-wrapper">
+                    <i data-lucide="wind" class="service-icon"></i>
+                </div>
+                <h3>Steam Ironing</h3>
+                <p>Professional pressing for crisp, wrinkle-free clothes ready to wear.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="how-it-works">
+        <div class="section-header">
+            <h2 class="title">Effortless Process</h2>
+        </div>
+        <div class="steps-container">
+            <div class="step-line"></div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Book Online</h3>
+                        <p>Schedule a convenient pickup time with just a few clicks.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>We Collect</h3>
+                        <p>Our professional driver safely collects your garments.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>We Deliver</h3>
+                        <p>Receive your fresh, pristine clothes within 24 hours.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="logo white">
+                    <i data-lucide="waves" class="logo-icon"></i>
+                    FreshWash
+                </div>
+                <p>Premium garment care tailored for modern living.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Company</h4>
+                <a href="#">About Us</a>
+                <a href="#">Careers</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-links">
+                <h4>Legal</h4>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 FreshWash. All rights reserved.</p>
+        </div>
+    </footer>
+</div>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>
