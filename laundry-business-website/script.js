@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Initialize Recaptcha (Required for Phone Auth to prevent spam)
     if (auth) {
-        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'send-otp-btn', {
             'size': 'invisible',
             'callback': (response) => {
                 // reCAPTCHA solved automatically
