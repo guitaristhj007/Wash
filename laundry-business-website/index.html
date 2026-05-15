@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreshWash - Premium Laundry Service</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Preloader Animation -->
+<div id="preloader">
+    <div class="animation-container">
+        <!-- Water drop -->
+        <div class="water-drop" id="water-drop"></div>
+        
+        <!-- Washing Machine -->
+        <div class="washing-machine" id="washing-machine">
+            <div class="machine-top"></div>
+            <div class="machine-door">
+                <div class="drum" id="drum">
+                    <div class="clothes"></div>
+                    <div class="water"></div>
+                </div>
+            </div>
+            <div class="machine-bottom"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div id="main-content" class="hidden">
+    <nav class="navbar">
+        <div class="logo">FreshWash</div>
+        <ul class="nav-links">
+            <li><a href="#services">Services</a></li>
+            <li><a href="#how-it-works">How it Works</a></li>
+            <li><a href="#testimonials">Reviews</a></li>
+        </ul>
+        <button class="cta-button nav-cta">Book Now</button>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Premium Laundry & Dry Cleaning at Your Doorstep</h1>
+            <p>Experience the freshness of professionally cleaned clothes without leaving your home.</p>
+            <button class="cta-button primary">Book Your Wash</button>
+        </div>
+    </header>
+
+    <section id="services" class="services">
+        <h2>Our Services</h2>
+        <div class="service-grid">
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                </div>
+                <h3>Wash & Fold</h3>
+                <p>Perfect for your everyday laundry. We wash, dry, and neatly fold your clothes.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                </div>
+                <h3>Dry Cleaning</h3>
+                <p>Professional care for your delicate and special garments.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                </div>
+                <h3>Ironing</h3>
+                <p>Crisp, wrinkle-free clothes ready to wear for any occasion.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="how-it-works">
+        <h2>How It Works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Book Online</h3>
+                <p>Schedule a pickup time that works for you.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>We Collect</h3>
+                <p>Our driver will collect your laundry from your doorstep.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>We Deliver</h3>
+                <p>Fresh, clean clothes returned to you within 24 hours.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section id="testimonials" class="testimonials">
+        <h2>What Our Customers Say</h2>
+        <div class="testimonial-grid">
+            <div class="testimonial">
+                <p>"FreshWash completely changed my weekends! No more laundry stress. The clothes always come back smelling amazing."</p>
+                <h4>- Sarah M.</h4>
+            </div>
+            <div class="testimonial">
+                <p>"Fast, reliable, and professional. My suits look brand new after their dry cleaning service."</p>
+                <h4>- David L.</h4>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h2>FreshWash</h2>
+                <p>Your trusted laundry partner.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+            </div>
+        </div>
+        <p class="copyright">&copy; 2026 FreshWash. All rights reserved.</p>
+    </footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
