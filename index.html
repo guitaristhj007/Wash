@@ -172,22 +172,12 @@
                 <div class="svc-card active-svc" data-svc="wf" onclick="selectSvc(this)">
                     <div class="svc-icon-wrap"><i data-lucide="shirt"></i></div>
                     <div class="svc-name">Wash &amp; Fold</div>
-                    <div class="svc-price">₹59 / kg</div>
+                    <div class="svc-price">₹69 / kg</div>
                 </div>
                 <div class="svc-card" data-svc="wi" onclick="selectSvc(this)">
                     <div class="svc-icon-wrap"><i data-lucide="wind"></i></div>
                     <div class="svc-name">Wash &amp; Iron</div>
                     <div class="svc-price">₹89 / kg</div>
-                </div>
-                <div class="svc-card" data-svc="dc" onclick="selectSvc(this)">
-                    <div class="svc-icon-wrap"><i data-lucide="sparkles"></i></div>
-                    <div class="svc-name">Dry Clean</div>
-                    <div class="svc-price">₹150 / item</div>
-                </div>
-                <div class="svc-card" data-svc="pm" onclick="selectSvc(this)">
-                    <div class="svc-icon-wrap"><i data-lucide="star"></i></div>
-                    <div class="svc-name">Premium</div>
-                    <div class="svc-price">₹149 / kg</div>
                 </div>
             </div>
 
@@ -451,15 +441,23 @@
         <div class="bs-field">
             <label>Service</label>
             <select id="bs-service" class="bs-select">
-                <option value="wf">Wash &amp; Fold – ₹59/kg</option>
+                <option value="wf">Wash &amp; Fold – ₹69/kg</option>
                 <option value="wi">Wash &amp; Iron – ₹89/kg</option>
-                <option value="dc">Dry Clean – ₹150/item</option>
-                <option value="pm">Premium – ₹149/kg</option>
             </select>
         </div>
         <div class="bs-field">
+            <label>Weight (kg)</label>
+            <input type="number" id="bs-weight" class="bs-input" min="1" max="50" value="3" step="1"/>
+        </div>
+        <div class="bs-field">
+            <label>Estimated Cost</label>
+            <div id="bs-price-breakdown" class="price-breakdown">
+                <!-- Calculated dynamically -->
+            </div>
+        </div>
+        <div class="bs-field">
             <label>Pickup Address</label>
-            <input type="text" class="bs-input" placeholder="Enter your address"/>
+            <input type="text" id="bs-address" class="bs-input" placeholder="Enter your address"/>
         </div>
         <div class="bs-field">
             <label>Preferred Pickup Time</label>

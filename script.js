@@ -151,7 +151,56 @@ window.switchOrderTab = function(btn, type) {
 window.selectSvc = function(el) {
   document.querySelectorAll('.svc-card').forEach(c => c.classList.remove('active-svc'));
   el.classList.add('active-svc');
+  
+  const svc = el.getAttribute('data-svc');
+  const serviceSelect = document.getElementById('bs-service');
+  if (serviceSelect && (svc === 'wf' || svc === 'wi')) {
+    serviceSelect.value = svc;
+    updateBookingPrice();
+  }
 };
+
+// Dynamic Pricing Calculation for Booking Sheet
+function updateBookingPrice() {
+  const serviceSelect = document.getElementById('bs-service');
+  const weightInput = document.getElementById('bs-weight');
+  const breakdownDiv = document.getElementById('bs-price-breakdown');
+  
+  if (!serviceSelect || !weightInput || !breakdownDiv) return;
+  
+  const service = serviceSelect.value;
+  const weight = parseFloat(weightInput.value) || 0;
+  
+  const rate = service === 'wf' ? 69 : 89;
+  const serviceName = service === 'wf' ? 'Wash & Fold' : 'Wash & Iron';
+  
+  const subtotal = weight * rate;
+  const isFreePickup = weight >= 3;
+  const pickupFee = isFreePickup ? 0 : 40;
+  const total = subtotal + pickupFee;
+  
+  let pickupFeeHTML = '';
+  if (isFreePickup) {
+    pickupFeeHTML = `<div><span class="pb-original-fee">₹40</span><span class="pb-free-tag">Free</span></div>`;
+  } else {
+    pickupFeeHTML = `<span>₹40</span>`;
+  }
+  
+  breakdownDiv.innerHTML = `
+    <div class="pb-row">
+      <span>${serviceName} (${weight} kg × ₹${rate})</span>
+      <span>₹${subtotal.toFixed(0)}</span>
+    </div>
+    <div class="pb-row">
+      <span>Pickup Fee</span>
+      ${pickupFeeHTML}
+    </div>
+    <div class="pb-row">
+      <span>Estimated Total</span>
+      <span>₹${total.toFixed(0)}</span>
+    </div>
+  `;
+}
 
 // ── Booking Sheet ──
 window.openBookingSheet = function() {
@@ -159,6 +208,22 @@ window.openBookingSheet = function() {
   const sheet = document.getElementById('booking-sheet');
   sheet.classList.remove('hidden');
   sheet.style.transform = 'translateX(-50%) translateY(0)';
+  
+  const addressInput = document.getElementById('bs-address');
+  if (addressInput && selectedLocationName && selectedLocationName !== "Detecting…" && selectedLocationName !== "Delhi, India") {
+    addressInput.value = selectedLocationName;
+  }
+
+  const activeSvcCard = document.querySelector('.svc-card.active-svc');
+  const serviceSelect = document.getElementById('bs-service');
+  if (activeSvcCard && serviceSelect) {
+    const svc = activeSvcCard.getAttribute('data-svc');
+    if (svc === 'wf' || svc === 'wi') {
+      serviceSelect.value = svc;
+    }
+  }
+
+  updateBookingPrice();
 };
 
 window.closeBookingSheet = function() {
@@ -177,6 +242,12 @@ document.querySelector('.bs-confirm').addEventListener('click', () => {
   closeBookingSheet();
   alert('🚀 Pickup booked! Your order is confirmed.');
 });
+
+// Attach pricing event listeners
+setTimeout(() => {
+  document.getElementById('bs-service')?.addEventListener('change', updateBookingPrice);
+  document.getElementById('bs-weight')?.addEventListener('input', updateBookingPrice);
+}, 500);
 
 // ── Google Maps Variables & Loader ──
 const GOOGLE_MAPS_API_KEY = "AIzaSyA6RRDzUkhIL6FYnCNDh_E0-gEI8B3pTSQ"; // Using your active Google Maps API Key
