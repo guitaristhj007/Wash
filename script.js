@@ -198,6 +198,20 @@ const searchInput = document.getElementById('loc-search-input');
 const suggestionsContainer = document.getElementById('loc-suggestions');
 
 if (searchInput) {
+  // Support hitting Enter to select the custom typed location directly
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const query = searchInput.value.trim();
+      if (query.length > 0) {
+        const locText = document.getElementById('loc-text');
+        if (locText) {
+          locText.textContent = query;
+        }
+        closeLocModal();
+      }
+    }
+  });
+
   searchInput.addEventListener('input', () => {
     clearTimeout(searchTimeout);
     const query = searchInput.value.trim();
@@ -205,6 +219,21 @@ if (searchInput) {
       suggestionsContainer.innerHTML = '';
       return;
     }
+
+    // Always show a fallback option at the top to let user select exactly what they typed
+    const showFallback = () => {
+      suggestionsContainer.innerHTML = '';
+      const fallbackDiv = document.createElement('div');
+      fallbackDiv.className = 'loc-suggestion custom-fallback';
+      fallbackDiv.style.fontWeight = 'bold';
+      fallbackDiv.innerHTML = `<i data-lucide="map-pin"></i> <span>Use "${query}"</span>`;
+      fallbackDiv.addEventListener('click', () => {
+        const locText = document.getElementById('loc-text');
+        if (locText) locText.textContent = query;
+        closeLocModal();
+      });
+      suggestionsContainer.appendChild(fallbackDiv);
+    };
     
     // Debounce Nominatim API requests
     searchTimeout = setTimeout(async () => {
@@ -212,21 +241,15 @@ if (searchInput) {
         const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=in&q=${encodeURIComponent(query)}`);
         const data = await res.json();
         
-        suggestionsContainer.innerHTML = '';
-        if (data.length === 0) {
-          suggestionsContainer.innerHTML = '<div class="loc-suggestion">No results found</div>';
-          return;
-        }
+        showFallback();
         
         data.slice(0, 5).forEach(item => {
           const div = document.createElement('div');
           div.className = 'loc-suggestion';
           div.innerHTML = `<i data-lucide="map-pin"></i> <span>${item.display_name}</span>`;
           div.addEventListener('click', () => {
-            // Pick the display name and update
             const locText = document.getElementById('loc-text');
             if (locText) {
-              // Extract a shorter name for the display (e.g., suburb, city)
               const parts = item.display_name.split(',');
               const shortName = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : item.display_name;
               locText.textContent = shortName;
@@ -238,6 +261,8 @@ if (searchInput) {
         lucide.createIcons();
       } catch (err) {
         console.error('Error fetching location suggestions:', err);
+        showFallback();
+        lucide.createIcons();
       }
     }, 400);
   });
