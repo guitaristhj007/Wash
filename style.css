@@ -24,7 +24,7 @@ input, select { font-family:inherit; }
 
 /* ── HEADER ── */
 #app-header { display:flex; align-items:center; justify-content:space-between; padding:12px 18px 10px; background:var(--surface); border-bottom:1px solid var(--border); flex-shrink:0; }
-.hdr-brand { font-size:1.15rem; font-weight:800; color:var(--primary); letter-spacing:-0.3px; display:flex; align-items:center; gap:4px; }
+.hdr-brand { font-size:1.15rem; font-weight:800; color:var(--primary); letter-spacing:-0.3px; display:flex; align-items:center; gap:4px; cursor:pointer; }
 .brand-loop { font-size:1.5rem; font-weight:900; color:var(--primary); line-height:1; }
 .pl-infinity { font-size:1.8rem; font-weight:900; color:#06B6D4; vertical-align:middle; margin-right:2px; }
 .auth-logo-icon { font-size:2rem; font-weight:900; color:var(--primary); line-height:1; }
@@ -176,7 +176,11 @@ input, select { font-family:inherit; }
 .bottom-sheet { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:var(--surface); border-radius:20px 20px 0 0; z-index:101; padding:16px 20px 32px; transition:transform .3s ease; }
 .bottom-sheet.hidden { transform:translateX(-50%) translateY(100%); }
 .bs-handle { width:36px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 18px; }
-.bs-title { font-size:1.05rem; font-weight:800; margin-bottom:18px; }
+.bs-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+.bs-title { font-size:1.05rem; font-weight:800; margin-bottom:0; }
+.bs-close { width:32px; height:32px; border-radius:50%; background:var(--bg); display:flex; align-items:center; justify-content:center; color:var(--sub); transition:all 0.15s ease; cursor:pointer; }
+.bs-close:hover { background:var(--border); color:var(--text); }
+.bs-close i { width:16px; height:16px; }
 .bs-field { margin-bottom:14px; }
 .bs-field label { display:block; font-size:0.78rem; font-weight:600; color:var(--sub); margin-bottom:6px; }
 .bs-input, .bs-select { width:100%; padding:11px 13px; border:1.5px solid var(--border); border-radius:11px; font-size:0.88rem; outline:none; background:var(--bg); }

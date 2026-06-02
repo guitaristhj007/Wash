@@ -116,7 +116,7 @@
     <!-- App Header -->
     <header id="app-header">
         <div class="hdr-left">
-            <div class="hdr-brand"><span class="brand-loop">∞</span> HouseLoop</div>
+            <button class="hdr-brand" onclick="switchTab('home')" style="border: none; background: none; padding: 0; text-align: left;"><span class="brand-loop">∞</span> HouseLoop</button>
             <button class="hdr-loc" id="hdr-location" onclick="openLocModal()">
                 <i data-lucide="map-pin" class="loc-pin"></i>
                 <span id="loc-text">Detecting…</span>
@@ -436,7 +436,10 @@
 <div id="booking-overlay" class="overlay hidden" onclick="closeBookingSheet()"></div>
 <div id="booking-sheet" class="bottom-sheet hidden">
     <div class="bs-handle"></div>
-    <h3 class="bs-title">Book a Pickup</h3>
+    <div class="bs-header">
+        <h3 class="bs-title">Book a Pickup</h3>
+        <button class="bs-close" onclick="closeBookingSheet()"><i data-lucide="x"></i></button>
+    </div>
     <div class="bs-body">
         <div class="bs-field">
             <label>Service</label>

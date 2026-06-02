@@ -158,6 +158,9 @@ window.selectSvc = function(el) {
     serviceSelect.value = svc;
     updateBookingPrice();
   }
+  
+  // Immediately open the booking sheet
+  openBookingSheet();
 };
 
 // Dynamic Pricing Calculation for Booking Sheet
@@ -224,6 +227,7 @@ window.openBookingSheet = function() {
   }
 
   updateBookingPrice();
+  lucide.createIcons();
 };
 
 window.closeBookingSheet = function() {
