@@ -178,72 +178,127 @@ document.querySelector('.bs-confirm').addEventListener('click', () => {
   alert('🚀 Pickup booked! Your order is confirmed.');
 });
 
-// ── Leaflet Map Variables ──
+// ── Google Maps Variables & Loader ──
+const GOOGLE_MAPS_API_KEY = "YOUR_API_KEY_HERE"; // PASTE YOUR GOOGLE MAPS API KEY HERE
+
 let map = null;
 let marker = null;
-let currentCoords = [28.6139, 77.2090]; // Default New Delhi coordinates
+let currentCoords = { lat: 28.6139, lng: 77.2090 }; // Default New Delhi coordinates
 let selectedLocationName = "Delhi, India";
+let autocompleteService = null;
+let geocoder = null;
 
-// Function to initialize Leaflet Map lazily
-function initMap() {
-  if (map) {
-    setTimeout(() => {
-      map.invalidateSize();
-    }, 200);
+// Dynamic script loader for Google Maps SDK
+function loadGoogleMapsScript(callback) {
+  if (window.google && window.google.maps) {
+    callback();
     return;
   }
 
-  // Initialize Leaflet Map
-  map = L.map('loc-map', {
-    zoomControl: true,
-    attributionControl: false
-  }).setView(currentCoords, 13);
+  if (GOOGLE_MAPS_API_KEY === "YOUR_API_KEY_HERE" || !GOOGLE_MAPS_API_KEY) {
+    alert("Please configure your GOOGLE_MAPS_API_KEY at the top of script.js to load the location system.");
+    const searchInput = document.getElementById('loc-search-input');
+    if (searchInput) searchInput.value = '';
+    return;
+  }
 
-  // Add OpenStreetMap tile layer (totally free)
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+  const existingScript = document.getElementById("google-maps-sdk");
+  if (existingScript) {
+    existingScript.addEventListener('load', callback);
+    return;
+  }
 
-  // Add dragable marker
-  marker = L.marker(currentCoords, { draggable: true }).addTo(map);
+  const script = document.createElement("script");
+  script.id = "google-maps-sdk";
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`;
+  script.async = true;
+  script.defer = true;
+  script.onload = callback;
+  script.onerror = () => {
+    alert("Failed to load Google Maps SDK. Please check your API Key and network connection.");
+    const searchInput = document.getElementById('loc-search-input');
+    if (searchInput) searchInput.value = '';
+  };
+  document.head.appendChild(script);
+}
 
-  // Update marker position and reverse geocode when clicking on the map
-  map.on('click', (e) => {
-    const lat = e.latlng.lat;
-    const lng = e.latlng.lng;
-    updateMarkerPos(lat, lng, true);
-  });
+// Function to initialize Google Map lazily
+function initMap() {
+  loadGoogleMapsScript(() => {
+    if (map) {
+      google.maps.event.trigger(map, "resize");
+      return;
+    }
 
-  // Update marker position and reverse geocode when marker dragging ends
-  marker.on('dragend', () => {
-    const pos = marker.getLatLng();
-    updateMarkerPos(pos.lat, pos.lng, true);
+    geocoder = new google.maps.Geocoder();
+    autocompleteService = new google.maps.places.AutocompleteService();
+
+    const mapOptions = {
+      center: currentCoords,
+      zoom: 15,
+      disableDefaultUI: true,
+      zoomControl: true
+    };
+
+    map = new google.maps.Map(document.getElementById('loc-map'), mapOptions);
+
+    marker = new google.maps.Marker({
+      position: currentCoords,
+      map: map,
+      draggable: true
+    });
+
+    // Map click -> Move marker
+    map.addListener('click', (e) => {
+      const lat = e.latLng.lat();
+      const lng = e.latLng.lng();
+      updateMarkerPos(lat, lng, true);
+    });
+
+    // Marker drag end -> Update position
+    marker.addListener('dragend', () => {
+      const pos = marker.getPosition();
+      updateMarkerPos(pos.lat(), pos.lng(), true);
+    });
+    
+    initAutocomplete();
   });
 }
 
 // Helper to update marker position, pan map, and geocode address
-async function updateMarkerPos(lat, lng, reverseGeocode = true) {
-  currentCoords = [lat, lng];
+function updateMarkerPos(lat, lng, reverseGeocode = true) {
+  currentCoords = { lat: lat, lng: lng };
   if (marker) {
-    marker.setLatLng(currentCoords);
+    marker.setPosition(currentCoords);
   }
   if (map) {
     map.panTo(currentCoords);
   }
 
   if (reverseGeocode) {
-    try {
-      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
-      const data = await res.json();
-      if (data && data.display_name) {
-        selectedLocationName = data.display_name;
-        const searchInput = document.getElementById('loc-search-input');
-        if (searchInput) {
-          const parts = data.display_name.split(',');
-          const shortName = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : data.display_name;
-          searchInput.value = shortName;
-        }
+    if (window.google && window.google.maps) {
+      if (!geocoder) {
+        geocoder = new google.maps.Geocoder();
       }
-    } catch (err) {
-      console.error('Error reverse geocoding:', err);
+      geocoder.geocode({ location: currentCoords }, (results, status) => {
+        if (status === google.maps.GeocoderStatus.OK && results[0]) {
+          selectedLocationName = results[0].formatted_address;
+          
+          const searchInput = document.getElementById('loc-search-input');
+          if (searchInput) {
+            const parts = selectedLocationName.split(',');
+            const shortName = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : selectedLocationName;
+            searchInput.value = shortName;
+          }
+          
+          const locText = document.getElementById('loc-text');
+          if (locText && !map) {
+            const parts = selectedLocationName.split(',');
+            const shortName = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : selectedLocationName;
+            locText.textContent = shortName;
+          }
+        }
+      });
     }
   }
 }
@@ -274,13 +329,14 @@ window.confirmSelectedLocation = function() {
   closeLocModal();
 };
 
-// Nominatim Manual Autocomplete Suggestions
+// Google Places Autocomplete Suggestions
 let searchTimeout = null;
 const searchInput = document.getElementById('loc-search-input');
 const suggestionsContainer = document.getElementById('loc-suggestions');
 
-if (searchInput) {
-  // Support hitting Enter to select current typed text as fallback
+function initAutocomplete() {
+  if (!searchInput) return;
+
   searchInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       const query = searchInput.value.trim();
@@ -303,7 +359,6 @@ if (searchInput) {
       suggestionsContainer.innerHTML = '';
       const fallbackDiv = document.createElement('div');
       fallbackDiv.className = 'loc-suggestion custom-fallback';
-      fallbackDiv.style.fontWeight = 'bold';
       fallbackDiv.innerHTML = `<i data-lucide="map-pin"></i> <span>Use "${query}"</span>`;
       fallbackDiv.addEventListener('click', () => {
         selectedLocationName = query;
@@ -312,39 +367,64 @@ if (searchInput) {
       suggestionsContainer.appendChild(fallbackDiv);
     };
 
-    searchTimeout = setTimeout(async () => {
-      try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=in&q=${encodeURIComponent(query)}`);
-        const data = await res.json();
-        
+    searchTimeout = setTimeout(() => {
+      if (!autocompleteService) {
         showFallback();
-        
-        data.slice(0, 5).forEach(item => {
+        return;
+      }
+
+      autocompleteService.getPlacePredictions({
+        input: query,
+        componentRestrictions: { country: 'in' }
+      }, (predictions, status) => {
+        if (status !== google.maps.places.PlacesServiceStatus.OK || !predictions) {
+          showFallback();
+          lucide.createIcons();
+          return;
+        }
+
+        suggestionsContainer.innerHTML = '';
+        showFallback();
+
+        predictions.forEach(prediction => {
           const div = document.createElement('div');
           div.className = 'loc-suggestion';
-          div.innerHTML = `<i data-lucide="map-pin"></i> <span>${item.display_name}</span>`;
+          div.innerHTML = `<i data-lucide="map-pin"></i> <span>${prediction.description}</span>`;
           div.addEventListener('click', () => {
-            const lat = parseFloat(item.lat);
-            const lon = parseFloat(item.lon);
-            selectedLocationName = item.display_name;
-            updateMarkerPos(lat, lon, false);
-            
-            // Set input value to a clean display name
-            const parts = item.display_name.split(',');
-            const shortName = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : item.display_name;
-            searchInput.value = shortName;
-            
+            geocodePlaceId(prediction.place_id, prediction.description);
             suggestionsContainer.innerHTML = '';
           });
           suggestionsContainer.appendChild(div);
         });
         lucide.createIcons();
-      } catch (err) {
-        console.error('Error fetching suggestions:', err);
-        showFallback();
-        lucide.createIcons();
-      }
+      });
     }, 400);
+  });
+}
+
+// Geocode a Google Place ID into coordinates
+function geocodePlaceId(placeId, displayName) {
+  loadGoogleMapsScript(() => {
+    if (!geocoder) {
+      geocoder = new google.maps.Geocoder();
+    }
+    geocoder.geocode({ placeId: placeId }, (results, status) => {
+      if (status === google.maps.GeocoderStatus.OK && results[0]) {
+        const location = results[0].geometry.location;
+        const lat = location.lat();
+        const lng = location.lng();
+        selectedLocationName = displayName;
+        
+        const searchInput = document.getElementById('loc-search-input');
+        if (searchInput) {
+          const parts = displayName.split(',');
+          const shortName = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : displayName;
+          searchInput.value = shortName;
+        }
+        
+        updateMarkerPos(lat, lng, false);
+      }
+    });
   });
 }
 
@@ -363,16 +443,18 @@ window.fetchLocation = function() {
     return;
   }
   
-  navigator.geolocation.getCurrentPosition(async (pos) => {
+  navigator.geolocation.getCurrentPosition((pos) => {
     const lat = pos.coords.latitude;
     const lng = pos.coords.longitude;
-    updateMarkerPos(lat, lng, true);
+    
+    loadGoogleMapsScript(() => {
+      updateMarkerPos(lat, lng, true);
+    });
   }, () => {
     alert('Permission to retrieve location was denied.');
     if (searchInput) searchInput.value = '';
   });
 };
-
 
 lucide.createIcons();
 
