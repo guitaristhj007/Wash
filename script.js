@@ -197,6 +197,13 @@ let searchTimeout = null;
 const searchInput = document.getElementById('loc-search-input');
 const suggestionsContainer = document.getElementById('loc-suggestions');
 
+// Handle Google Maps authorization failure globally
+window.googleMapsAuthFailed = false;
+window.gm_authFailure = function() {
+  window.googleMapsAuthFailed = true;
+  console.warn("Google Maps auth failed or API is not activated. Using OpenStreetMap fallback.");
+};
+
 if (searchInput) {
   // Support hitting Enter to select the custom typed location directly
   searchInput.addEventListener('keydown', (e) => {
@@ -235,14 +242,29 @@ if (searchInput) {
     };
 
     searchTimeout = setTimeout(() => {
-      // Check if Google Maps is loaded
-      if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+      // Check if Google Maps is loaded and has NOT failed authentication
+      if (typeof google !== 'undefined' && google.maps && google.maps.places && !window.googleMapsAuthFailed) {
+        let fallbackTriggered = false;
+        
+        // Race condition: if Google doesn't return within 800ms, fallback to Nominatim
+        const googleTimeout = setTimeout(() => {
+          if (!fallbackTriggered) {
+            fallbackTriggered = true;
+            console.warn("Google Places timed out. Using Nominatim fallback.");
+            fetchNominatimSuggestions(query, showFallback);
+          }
+        }, 800);
+
         try {
           const service = new google.maps.places.AutocompleteService();
           service.getPlacePredictions({
             input: query,
             componentRestrictions: { country: 'in' }
           }, (predictions, status) => {
+            if (fallbackTriggered) return;
+            fallbackTriggered = true;
+            clearTimeout(googleTimeout);
+            
             showFallback();
             if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
               predictions.slice(0, 5).forEach(pred => {
@@ -252,7 +274,6 @@ if (searchInput) {
                 div.addEventListener('click', () => {
                   const locText = document.getElementById('loc-text');
                   if (locText) {
-                    // Extract first two parts of address for display to keep it short
                     const parts = pred.description.split(',');
                     const shortName = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : pred.description;
                     locText.textContent = shortName;
@@ -263,11 +284,12 @@ if (searchInput) {
               });
               lucide.createIcons();
             } else {
-              // Fallback to Nominatim if Google Autocomplete fails
               fetchNominatimSuggestions(query, showFallback);
             }
           });
         } catch (e) {
+          fallbackTriggered = true;
+          clearTimeout(googleTimeout);
           console.error("Google Places failed, falling back to OSM Nominatim:", e);
           fetchNominatimSuggestions(query, showFallback);
         }
@@ -325,7 +347,7 @@ window.fetchLocation = function() {
     const lng = pos.coords.longitude;
 
     // Try Google Geocoding first
-    if (typeof google !== 'undefined' && google.maps) {
+    if (typeof google !== 'undefined' && google.maps && !window.googleMapsAuthFailed) {
       try {
         const geocoder = new google.maps.Geocoder();
         geocoder.geocode({ location: { lat, lng } }, (results, status) => {
