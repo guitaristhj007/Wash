@@ -178,7 +178,7 @@ function updateBookingPrice() {
   const serviceName = service === 'wf' ? 'Wash & Fold' : 'Wash & Iron';
   
   const subtotal = weight * rate;
-  const isFreePickup = weight >= 3;
+  const isFreePickup = weight > 3;
   const pickupFee = isFreePickup ? 0 : 40;
   const total = subtotal + pickupFee;
   
