@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FreshWash – Laundry at Your Door</title>
+    <meta name="description" content="Premium laundry at your doorstep. Pickup in 30 min, back in 48 hrs.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div id="preloader">
+    <div class="pl-scene">
+        <div class="pl-bottle-wrap">
+            <svg class="pl-bottle" viewBox="0 0 80 130" xmlns="http://www.w3.org/2000/svg">
+                <rect x="30" y="2" width="20" height="14" rx="5" fill="#06B6D4"/>
+                <rect x="18" y="13" width="44" height="10" rx="4" fill="#0891B2"/>
+                <rect x="8" y="22" width="64" height="90" rx="14" fill="#1B5E3B"/>
+                <rect x="16" y="42" width="48" height="50" rx="8" fill="rgba(255,255,255,0.12)"/>
+                <rect x="22" y="52" width="36" height="4" rx="2" fill="rgba(255,255,255,0.45)"/>
+                <rect x="26" y="62" width="28" height="3" rx="1.5" fill="rgba(255,255,255,0.3)"/>
+                <rect x="24" y="70" width="32" height="3" rx="1.5" fill="rgba(255,255,255,0.3)"/>
+                <rect x="14" y="28" width="8" height="35" rx="4" fill="rgba(255,255,255,0.1)"/>
+                <circle cx="40" cy="13" r="3" fill="#67E8F9"/>
+            </svg>
+        </div>
+        <div class="pl-drop d1"></div>
+        <div class="pl-drop d2"></div>
+        <div class="pl-drop d3"></div>
+        <div class="pl-splash">
+            <div class="splash-r r1"></div>
+            <div class="splash-r r2"></div>
+        </div>
+        <div class="pl-machine">
+            <svg class="wm-svg" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="4" width="132" height="132" rx="18" fill="#1B5E3B"/>
+                <rect x="10" y="10" width="120" height="26" rx="8" fill="rgba(0,0,0,0.25)"/>
+                <circle cx="30" cy="23" r="6" fill="#06B6D4" opacity="0.9"/>
+                <circle cx="48" cy="23" r="4" fill="rgba(255,255,255,0.25)"/>
+                <rect x="62" y="17" width="56" height="12" rx="4" fill="rgba(255,255,255,0.08)"/>
+                <circle cx="70" cy="78" r="50" fill="#0f3d27"/>
+                <circle cx="70" cy="78" r="42" fill="#071c12"/>
+                <clipPath id="wclip"><circle cx="70" cy="78" r="40"/></clipPath>
+                <rect x="30" y="88" width="80" height="32" fill="#06B6D4" opacity="0.45" clip-path="url(#wclip)"/>
+                <g class="drum-spin">
+                    <ellipse cx="54" cy="65" rx="11" ry="7" fill="#F472B6" opacity="0.9" transform="rotate(20 54 65)"/>
+                    <ellipse cx="87" cy="70" rx="9" ry="6" fill="#818CF8" opacity="0.9" transform="rotate(-15 87 70)"/>
+                    <ellipse cx="70" cy="92" rx="10" ry="6" fill="#FB923C" opacity="0.9" transform="rotate(10 70 92)"/>
+                    <ellipse cx="56" cy="88" rx="8" ry="5" fill="#4ADE80" opacity="0.9" transform="rotate(-20 56 88)"/>
+                </g>
+                <circle cx="70" cy="78" r="30" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+                <circle cx="55" cy="62" r="10" fill="rgba(255,255,255,0.05)"/>
+            </svg>
+        </div>
+    </div>
+    <p class="pl-brand">FreshWash</p>
+    <p class="pl-tagline">Fresh clothes, at your door</p>
+</div>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen" class="hidden">
+    <div class="auth-blob b1"></div>
+    <div class="auth-blob b2"></div>
+    <div class="auth-card">
+        <div class="auth-logo-wrap">
+            <span class="auth-logo-icon">🫧</span>
+            <h1>FreshWash</h1>
+        </div>
+        <p class="auth-tagline">Fresh clothes, at your door</p>
+
+        <button class="btn-google" id="btn-google-auth">
+            <svg width="20" height="20" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Continue with Google
+        </button>
+
+        <div class="auth-divider"><span>or use phone</span></div>
+
+        <div id="otp-step-1">
+            <div class="phone-row">
+                <span class="cc">+91</span>
+                <input type="tel" id="phone-input" maxlength="10" placeholder="10-digit mobile number" inputmode="numeric"/>
+            </div>
+            <div id="recaptcha-container"></div>
+            <button class="btn-primary full" id="btn-send-otp">Send OTP</button>
+        </div>
+
+        <div id="otp-step-2" class="hidden">
+            <p class="otp-hint">OTP sent to +91 <span id="otp-phone-display"></span></p>
+            <div class="otp-boxes">
+                <input type="text" maxlength="1" inputmode="numeric" class="otp-box"/>
+                <input type="text" maxlength="1" inputmode="numeric" class="otp-box"/>
+                <input type="text" maxlength="1" inputmode="numeric" class="otp-box"/>
+                <input type="text" maxlength="1" inputmode="numeric" class="otp-box"/>
+                <input type="text" maxlength="1" inputmode="numeric" class="otp-box"/>
+                <input type="text" maxlength="1" inputmode="numeric" class="otp-box"/>
+            </div>
+            <button class="btn-primary full" id="btn-verify-otp">Verify & Enter</button>
+            <button class="btn-ghost" id="btn-resend">Resend OTP</button>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" class="hidden">
+
+    <!-- App Header -->
+    <header id="app-header">
+        <div class="hdr-left" id="hdr-location-wrap">
+            <div class="hdr-brand">FreshWash</div>
+            <button class="hdr-loc" id="hdr-location" onclick="fetchLocation()">
+                <i data-lucide="map-pin" class="loc-pin"></i>
+                <span id="loc-text">Detecting…</span>
+                <i data-lucide="chevron-down" class="loc-chevron"></i>
+            </button>
+        </div>
+        <div class="hdr-right">
+            <button class="hdr-icon-btn" aria-label="Notifications">
+                <i data-lucide="bell"></i>
+                <span class="notif-dot"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Screens -->
+    <main id="screens">
+
+        <!-- HOME -->
+        <section id="screen-home" class="screen active">
+            <div class="hero-card">
+                <div class="hero-text">
+                    <h2>Fresh clothes,<br>at your door</h2>
+                    <p class="hero-sub">Pickup in 30 min · Back in 48 hrs</p>
+                    <button class="btn-book" onclick="openBookingSheet()">
+                        <i data-lucide="package"></i> Book a Pickup
+                    </button>
+                </div>
+                <div class="hero-art">
+                    <div class="ha-ring r3"></div>
+                    <div class="ha-ring r2"></div>
+                    <div class="ha-ring r1"></div>
+                    <span class="ha-emoji">🧺</span>
+                </div>
+            </div>
+
+            <div class="sec-hdr">
+                <h3>Select service</h3>
+            </div>
+            <div class="svc-grid">
+                <div class="svc-card active-svc" data-svc="wf" onclick="selectSvc(this)">
+                    <div class="svc-icon-wrap"><i data-lucide="shirt"></i></div>
+                    <div class="svc-name">Wash &amp; Fold</div>
+                    <div class="svc-price">₹59 / kg</div>
+                </div>
+                <div class="svc-card" data-svc="wi" onclick="selectSvc(this)">
+                    <div class="svc-icon-wrap"><i data-lucide="wind"></i></div>
+                    <div class="svc-name">Wash &amp; Iron</div>
+                    <div class="svc-price">₹89 / kg</div>
+                </div>
+                <div class="svc-card" data-svc="dc" onclick="selectSvc(this)">
+                    <div class="svc-icon-wrap"><i data-lucide="sparkles"></i></div>
+                    <div class="svc-name">Dry Clean</div>
+                    <div class="svc-price">₹150 / item</div>
+                </div>
+                <div class="svc-card" data-svc="pm" onclick="selectSvc(this)">
+                    <div class="svc-icon-wrap"><i data-lucide="star"></i></div>
+                    <div class="svc-name">Premium</div>
+                    <div class="svc-price">₹149 / kg</div>
+                </div>
+            </div>
+
+            <div class="sec-hdr">
+                <h3>Active order</h3>
+                <button class="sec-link" onclick="switchTab('orders')">View all</button>
+            </div>
+            <div class="active-order-card">
+                <div class="ao-row">
+                    <span class="ao-id">#ORD-2841</span>
+                    <span class="status-pill at-vendor">At vendor</span>
+                </div>
+                <div class="tracker">
+                    <div class="t-step done">
+                        <div class="t-dot"><i data-lucide="check" class="t-check"></i></div>
+                        <span>Picked up</span>
+                    </div>
+                    <div class="t-line done"></div>
+                    <div class="t-step done">
+                        <div class="t-dot"><i data-lucide="check" class="t-check"></i></div>
+                        <span>At vendor</span>
+                    </div>
+                    <div class="t-line"></div>
+                    <div class="t-step">
+                        <div class="t-dot"></div>
+                        <span>Cleaning</span>
+                    </div>
+                    <div class="t-line"></div>
+                    <div class="t-step">
+                        <div class="t-dot"></div>
+                        <span>Delivered</span>
+                    </div>
+                </div>
+                <p class="ao-eta">📦 Est. delivery: Tomorrow, 6–8 PM · Wash &amp; Iron · 3 kg</p>
+            </div>
+
+            <div class="plans-promo" onclick="switchTab('plans')">
+                <div>
+                    <p class="promo-title">Save with a plan</p>
+                    <p class="promo-sub">From ₹999/month · Unlimited pickups</p>
+                </div>
+                <button class="btn-plans-sm">View plans</button>
+            </div>
+            <div class="scr-pad"></div>
+        </section>
+
+        <!-- VENDORS -->
+        <section id="screen-vendors" class="screen">
+            <div class="search-wrap">
+                <i data-lucide="search" class="search-ico"></i>
+                <input type="text" class="search-input" placeholder="Search vendors near you…"/>
+            </div>
+            <div class="sec-hdr">
+                <h3>Nearby vendors</h3>
+                <span class="count-tag">3 available</span>
+            </div>
+            <div class="vendor-list">
+                <div class="vendor-card">
+                    <div class="vendor-emo" style="background:#D1FAE5">🏪</div>
+                    <div class="vendor-info">
+                        <h4>CleanCraft Laundry</h4>
+                        <div class="vendor-meta">⭐ 4.8 · 1.2 km · <span class="open">Open</span></div>
+                        <p class="vendor-svcs">Wash &amp; Fold · Dry Clean</p>
+                    </div>
+                    <button class="btn-vselect">Select</button>
+                </div>
+                <div class="vendor-card">
+                    <div class="vendor-emo" style="background:#E0F2FE">🫧</div>
+                    <div class="vendor-info">
+                        <h4>PureWash Pro</h4>
+                        <div class="vendor-meta">⭐ 4.6 · 2.1 km · <span class="open">Open</span></div>
+                        <p class="vendor-svcs">Wash &amp; Iron · Premium</p>
+                    </div>
+                    <button class="btn-vselect">Select</button>
+                </div>
+                <div class="vendor-card">
+                    <div class="vendor-emo" style="background:#FEF3C7">✨</div>
+                    <div class="vendor-info">
+                        <h4>ShineFresh</h4>
+                        <div class="vendor-meta">⭐ 4.5 · 3.4 km · <span class="closed-tag">Closed</span></div>
+                        <p class="vendor-svcs">All services</p>
+                    </div>
+                    <button class="btn-vselect" disabled>Closed</button>
+                </div>
+            </div>
+            <div class="scr-pad"></div>
+        </section>
+
+        <!-- PLANS -->
+        <section id="screen-plans" class="screen">
+            <div class="plans-hero">
+                <h2>Save more,<br>wash more 💚</h2>
+                <p>Pick a plan that suits your needs</p>
+            </div>
+            <div class="plans-list">
+                <div class="plan-card">
+                    <div class="plan-badge">Starter</div>
+                    <h4 class="plan-name">Monthly Lite</h4>
+                    <div class="plan-price">₹999 <span>/month</span></div>
+                    <ul class="plan-perks">
+                        <li><i data-lucide="check-circle"></i>8 pickups/month</li>
+                        <li><i data-lucide="check-circle"></i>Wash &amp; Fold only</li>
+                        <li><i data-lucide="check-circle"></i>Priority pickup</li>
+                    </ul>
+                    <button class="btn-plan">Choose Plan</button>
+                </div>
+                <div class="plan-card featured">
+                    <div class="plan-badge best">Best Value</div>
+                    <h4 class="plan-name">Monthly Pro</h4>
+                    <div class="plan-price">₹1,999 <span>/month</span></div>
+                    <ul class="plan-perks">
+                        <li><i data-lucide="check-circle"></i>Unlimited pickups</li>
+                        <li><i data-lucide="check-circle"></i>All services included</li>
+                        <li><i data-lucide="check-circle"></i>Same-day delivery</li>
+                        <li><i data-lucide="check-circle"></i>2 free dry cleans/month</li>
+                    </ul>
+                    <button class="btn-plan primary">Choose Plan</button>
+                </div>
+                <div class="plan-card">
+                    <div class="plan-badge">Quarterly</div>
+                    <h4 class="plan-name">Quarterly Pro</h4>
+                    <div class="plan-price">₹4,999 <span>/3 months</span></div>
+                    <ul class="plan-perks">
+                        <li><i data-lucide="check-circle"></i>Unlimited pickups</li>
+                        <li><i data-lucide="check-circle"></i>All services included</li>
+                        <li><i data-lucide="check-circle"></i>Save ₹1,000 vs monthly</li>
+                    </ul>
+                    <button class="btn-plan">Choose Plan</button>
+                </div>
+            </div>
+            <div class="scr-pad"></div>
+        </section>
+
+        <!-- ORDERS -->
+        <section id="screen-orders" class="screen">
+            <div class="order-tabs">
+                <button class="otab active" onclick="switchOrderTab(this,'active')">Active</button>
+                <button class="otab" onclick="switchOrderTab(this,'history')">History</button>
+            </div>
+
+            <div id="orders-active">
+                <div class="order-card">
+                    <div class="oc-top">
+                        <span class="ao-id">#ORD-2841</span>
+                        <span class="status-pill at-vendor">At vendor</span>
+                    </div>
+                    <p class="oc-detail">Wash &amp; Iron · 3 kg · ₹267</p>
+                    <div class="tracker">
+                        <div class="t-step done"><div class="t-dot"><i data-lucide="check" class="t-check"></i></div><span>Picked up</span></div>
+                        <div class="t-line done"></div>
+                        <div class="t-step done"><div class="t-dot"><i data-lucide="check" class="t-check"></i></div><span>At vendor</span></div>
+                        <div class="t-line"></div>
+                        <div class="t-step"><div class="t-dot"></div><span>Cleaning</span></div>
+                        <div class="t-line"></div>
+                        <div class="t-step"><div class="t-dot"></div><span>Delivered</span></div>
+                    </div>
+                    <p class="ao-eta">Est. delivery: Tomorrow, 6–8 PM</p>
+                </div>
+            </div>
+
+            <div id="orders-history" class="hidden">
+                <div class="order-card hist">
+                    <div class="oc-top">
+                        <span class="ao-id">#ORD-2804</span>
+                        <span class="status-pill delivered">Delivered</span>
+                    </div>
+                    <p class="oc-detail">Wash &amp; Fold · 5 kg · ₹295</p>
+                    <p class="hist-date">25 May 2026</p>
+                    <button class="btn-reorder">Reorder</button>
+                </div>
+                <div class="order-card hist">
+                    <div class="oc-top">
+                        <span class="ao-id">#ORD-2778</span>
+                        <span class="status-pill delivered">Delivered</span>
+                    </div>
+                    <p class="oc-detail">Dry Clean · 2 items · ₹300</p>
+                    <p class="hist-date">18 May 2026</p>
+                    <button class="btn-reorder">Reorder</button>
+                </div>
+                <div class="order-card hist">
+                    <div class="oc-top">
+                        <span class="ao-id">#ORD-2751</span>
+                        <span class="status-pill delivered">Delivered</span>
+                    </div>
+                    <p class="oc-detail">Premium · 4 kg · ₹596</p>
+                    <p class="hist-date">10 May 2026</p>
+                    <button class="btn-reorder">Reorder</button>
+                </div>
+            </div>
+            <div class="scr-pad"></div>
+        </section>
+
+        <!-- PROFILE -->
+        <section id="screen-profile" class="screen">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profile-avatar">👤</div>
+                <h3 id="profile-name">User</h3>
+                <p id="profile-email" class="profile-email">Loading…</p>
+            </div>
+            <div class="profile-section">
+                <div class="profile-row" onclick="openBookingSheet()">
+                    <div class="pr-left"><i data-lucide="package"></i><span>My Addresses</span></div>
+                    <i data-lucide="chevron-right" class="pr-arrow"></i>
+                </div>
+                <div class="profile-row" onclick="switchTab('plans')">
+                    <div class="pr-left"><i data-lucide="credit-card"></i><span>My Plan</span></div>
+                    <i data-lucide="chevron-right" class="pr-arrow"></i>
+                </div>
+                <div class="profile-row">
+                    <div class="pr-left"><i data-lucide="bell"></i><span>Notifications</span></div>
+                    <i data-lucide="chevron-right" class="pr-arrow"></i>
+                </div>
+                <div class="profile-row">
+                    <div class="pr-left"><i data-lucide="help-circle"></i><span>Help &amp; Support</span></div>
+                    <i data-lucide="chevron-right" class="pr-arrow"></i>
+                </div>
+                <div class="profile-row">
+                    <div class="pr-left"><i data-lucide="shield"></i><span>Privacy Policy</span></div>
+                    <i data-lucide="chevron-right" class="pr-arrow"></i>
+                </div>
+            </div>
+            <button class="btn-logout" id="btn-logout">
+                <i data-lucide="log-out"></i> Sign Out
+            </button>
+            <div class="scr-pad"></div>
+        </section>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav id="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('home')" id="nav-home">
+            <i data-lucide="home"></i>
+            <span>Home</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('vendors')" id="nav-vendors">
+            <i data-lucide="store"></i>
+            <span>Vendors</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('plans')" id="nav-plans">
+            <i data-lucide="layers"></i>
+            <span>Plans</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('orders')" id="nav-orders">
+            <i data-lucide="package"></i>
+            <span>Orders</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('profile')" id="nav-profile">
+            <i data-lucide="user"></i>
+            <span>Profile</span>
+        </button>
+    </nav>
+</div>
+
+<!-- BOOKING BOTTOM SHEET -->
+<div id="booking-overlay" class="overlay hidden" onclick="closeBookingSheet()"></div>
+<div id="booking-sheet" class="bottom-sheet hidden">
+    <div class="bs-handle"></div>
+    <h3 class="bs-title">Book a Pickup</h3>
+    <div class="bs-body">
+        <div class="bs-field">
+            <label>Service</label>
+            <select id="bs-service" class="bs-select">
+                <option value="wf">Wash &amp; Fold – ₹59/kg</option>
+                <option value="wi">Wash &amp; Iron – ₹89/kg</option>
+                <option value="dc">Dry Clean – ₹150/item</option>
+                <option value="pm">Premium – ₹149/kg</option>
+            </select>
+        </div>
+        <div class="bs-field">
+            <label>Pickup Address</label>
+            <input type="text" class="bs-input" placeholder="Enter your address"/>
+        </div>
+        <div class="bs-field">
+            <label>Preferred Pickup Time</label>
+            <div class="time-slots">
+                <button class="ts active">Now</button>
+                <button class="ts">In 1 hr</button>
+                <button class="ts">In 2 hrs</button>
+                <button class="ts">Tomorrow</button>
+            </div>
+        </div>
+        <button class="btn-primary full bs-confirm">Confirm Pickup 🚀</button>
+    </div>
+</div>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>
