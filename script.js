@@ -179,7 +179,7 @@ document.querySelector('.bs-confirm').addEventListener('click', () => {
 });
 
 // ── Google Maps Variables & Loader ──
-const GOOGLE_MAPS_API_KEY = "AIzaSyBNZ5pAvogsFwqNQ-rnfxgihU30DvivDvE"; // Using your Firebase/Google Cloud API Key
+const GOOGLE_MAPS_API_KEY = "AIzaSyA6RRDzUkhIL6FYnCNDh_E0-gEI8B3pTSQ"; // Using your active Google Maps API Key
 
 let map = null;
 let marker = null;
