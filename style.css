@@ -24,7 +24,11 @@ input, select { font-family:inherit; }
 
 /* ── HEADER ── */
 #app-header { display:flex; align-items:center; justify-content:space-between; padding:12px 18px 10px; background:var(--surface); border-bottom:1px solid var(--border); flex-shrink:0; }
-.hdr-brand { font-size:1.15rem; font-weight:800; color:var(--primary); letter-spacing:-0.3px; }
+.hdr-brand { font-size:1.15rem; font-weight:800; color:var(--primary); letter-spacing:-0.3px; display:flex; align-items:center; gap:4px; }
+.brand-loop { font-size:1.5rem; font-weight:900; color:var(--primary); line-height:1; }
+.pl-infinity { font-size:1.8rem; font-weight:900; color:#06B6D4; vertical-align:middle; margin-right:2px; }
+.auth-logo-icon { font-size:2rem; font-weight:900; color:var(--primary); line-height:1; }
+
 .hdr-loc { display:flex; align-items:center; gap:4px; font-size:0.78rem; color:var(--sub); background:none; border:none; cursor:pointer; padding:2px 0; }
 .loc-pin { width:13px; height:13px; color:var(--primary); }
 .loc-chevron { width:13px; height:13px; }
