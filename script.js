@@ -291,8 +291,26 @@ window.openBookingSheet = function(lockService = false) {
   sheet.classList.remove('hidden');
   
   const addressInput = document.getElementById('bs-address');
+  const displayVal = document.getElementById('adc-selected-val');
+  
   if (addressInput && selectedLocationName && selectedLocationName !== "Detecting…" && selectedLocationName !== "Delhi, India") {
     addressInput.value = selectedLocationName;
+    if (displayVal) {
+      const parts = selectedLocationName.split(',');
+      const shortText = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : selectedLocationName;
+      displayVal.textContent = shortText;
+    }
+  } else if (addressInput) {
+    let saved = localStorage.getItem('hl_saved_addresses');
+    let addresses = saved ? JSON.parse(saved) : defaultSavedAddresses;
+    if (addresses.length > 0) {
+      addressInput.value = addresses[0].address;
+      if (displayVal) {
+        const parts = addresses[0].address.split(',');
+        const shortText = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : addresses[0].address;
+        displayVal.textContent = shortText;
+      }
+    }
   }
 
   const serviceSelect = document.getElementById('bs-service');
@@ -457,99 +475,100 @@ function initBookingAddressAutocomplete() {
 
 // Booking Address Saved Options Manager
 const defaultSavedAddresses = [
-  { label: "Home", icon: "🏠", address: "12, Ground Floor, Vasant Kunj, New Delhi, 110070" },
-  { label: "Work", icon: "💼", address: "Tech Park, Phase 2, Okhla Industrial Area, New Delhi, 110020" },
-  { label: "Studio", icon: "🎨", address: "Studio CREO / BOFFI Studio, Mandi Road, New Manglapuri, New Delhi, 110030" }
+  { label: "Home", icon: "🏠", address: "Building 6, Mandi Rd, New Manglapuri, Sultanpur, New Delhi, Delhi 110030, India" },
+  { label: "Home", icon: "🏠", address: "Ground floor, Street No. 1, U Block, DLF Phase 3, Sector 24, Gurugram, Haryana 122002, India" }
 ];
 
-function initSavedAddresses() {
-  const chipsContainer = document.getElementById('bs-saved-chips');
-  if (!chipsContainer) return;
+window.selectedAddressIndex = null;
+window.isAddingNewAddressFromSheet = false;
+
+window.openSavedAddressesSheet = function() {
+  document.getElementById('saved-addresses-overlay').classList.remove('hidden');
+  document.getElementById('saved-addresses-sheet').classList.remove('hidden');
+  window.selectedAddressIndex = null;
   
-  function renderChips() {
-    let saved = localStorage.getItem('hl_saved_addresses');
-    let addresses = saved ? JSON.parse(saved) : defaultSavedAddresses;
-    
-    chipsContainer.innerHTML = '';
-    
-    addresses.forEach(addr => {
-      const btn = document.createElement('button');
-      btn.className = 'saved-chip';
-      btn.type = 'button';
-      btn.innerHTML = `<span>${addr.icon}</span> ${addr.label}`;
-      btn.title = addr.address;
-      
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        
-        const bsAddress = document.getElementById('bs-address');
-        if (bsAddress) {
-          bsAddress.value = addr.address;
-          selectedLocationName = addr.address;
-          
-          const locText = document.getElementById('loc-text');
-          if (locText) {
-            const parts = selectedLocationName.split(',');
-            const shortName = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : selectedLocationName;
-            locText.textContent = shortName;
-          }
-          
-          loadGoogleMapsScript(() => {
-            if (!geocoder) geocoder = new google.maps.Geocoder();
-            geocoder.geocode({ address: addr.address }, (results, status) => {
-              if (status === google.maps.GeocoderStatus.OK && results[0]) {
-                const location = results[0].geometry.location;
-                updateMarkerPos(location.lat(), location.lng(), false);
-              }
-            });
-          });
-        }
-        
-        document.querySelectorAll('.saved-chip').forEach(c => c.classList.remove('active'));
-        btn.classList.add('active');
-      });
-      chipsContainer.appendChild(btn);
-    });
-    
-    const saveBtn = document.createElement('button');
-    saveBtn.className = 'saved-chip save-current-btn';
-    saveBtn.type = 'button';
-    saveBtn.innerHTML = `<i data-lucide="plus" style="width:12px;height:12px;"></i> Save Current`;
-    saveBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const bsAddress = document.getElementById('bs-address');
-      if (!bsAddress || !bsAddress.value.trim() || bsAddress.value === 'Detecting…') {
-        alert('Please enter an address first to save it.');
-        return;
-      }
-      const label = prompt('Enter a label for this address (e.g. Home, Work, Studio, Gym):');
-      if (!label) return;
-      
-      const icon = prompt('Enter an emoji or icon (default: 📍):') || '📍';
-      
-      const newAddr = {
-        label: label.trim(),
-        icon: icon.trim(),
-        address: bsAddress.value.trim()
-      };
-      
-      let saved = localStorage.getItem('hl_saved_addresses');
-      let currentList = saved ? JSON.parse(saved) : [...defaultSavedAddresses];
-      currentList.push(newAddr);
-      localStorage.setItem('hl_saved_addresses', JSON.stringify(currentList));
-      
-      renderChips();
-    });
-    chipsContainer.appendChild(saveBtn);
-    lucide.createIcons();
+  const proceedBtn = document.getElementById('btn-address-proceed');
+  if (proceedBtn) {
+    proceedBtn.disabled = true;
   }
   
-  renderChips();
-}
+  renderSavedAddressesList();
+  lucide.createIcons();
+};
 
-// Initialize autocomplete & saved addresses
-initBookingAddressAutocomplete();
-initSavedAddresses();
+window.closeSavedAddressesSheet = function() {
+  document.getElementById('saved-addresses-overlay').classList.add('hidden');
+  document.getElementById('saved-addresses-sheet').classList.add('hidden');
+};
+
+window.renderSavedAddressesList = function() {
+  const container = document.getElementById('sheet-saved-addresses-list');
+  if (!container) return;
+  
+  let saved = localStorage.getItem('hl_saved_addresses');
+  let addresses = saved ? JSON.parse(saved) : defaultSavedAddresses;
+  
+  if (!saved) {
+    localStorage.setItem('hl_saved_addresses', JSON.stringify(defaultSavedAddresses));
+  }
+  
+  container.innerHTML = '';
+  
+  addresses.forEach((addr, index) => {
+    const row = document.createElement('div');
+    row.className = `address-item-row ${window.selectedAddressIndex === index ? 'selected' : ''}`;
+    row.onclick = () => selectAddressItem(index);
+    
+    row.innerHTML = `
+      <div class="address-radio-circle"></div>
+      <div class="address-item-details">
+        <span class="address-item-label">${addr.label}</span>
+        <span class="address-item-description">${addr.address}</span>
+      </div>
+      <span class="address-item-menu">⋮</span>
+    `;
+    container.appendChild(row);
+  });
+};
+
+window.selectAddressItem = function(index) {
+  window.selectedAddressIndex = index;
+  const proceedBtn = document.getElementById('btn-address-proceed');
+  if (proceedBtn) {
+    proceedBtn.disabled = false;
+  }
+  renderSavedAddressesList();
+};
+
+window.confirmAddressSelection = function() {
+  if (window.selectedAddressIndex === null) return;
+  
+  let saved = localStorage.getItem('hl_saved_addresses');
+  let addresses = saved ? JSON.parse(saved) : defaultSavedAddresses;
+  const selectedAddr = addresses[window.selectedAddressIndex];
+  
+  if (selectedAddr) {
+    const hiddenInput = document.getElementById('bs-address');
+    if (hiddenInput) {
+      hiddenInput.value = selectedAddr.address;
+    }
+    
+    const displayVal = document.getElementById('adc-selected-val');
+    if (displayVal) {
+      const parts = selectedAddr.address.split(',');
+      const shortText = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : selectedAddr.address;
+      displayVal.textContent = shortText;
+    }
+  }
+  
+  closeSavedAddressesSheet();
+};
+
+window.triggerAddNewAddress = function() {
+  window.isAddingNewAddressFromSheet = true;
+  closeSavedAddressesSheet();
+  openLocModal();
+};
 
 // Attach pricing event listeners
 setTimeout(() => {
@@ -807,6 +826,29 @@ window.confirmSelectedLocation = function() {
     const shortName = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : selectedLocationName;
     locText.textContent = shortName;
   }
+  
+  if (window.isAddingNewAddressFromSheet) {
+    window.isAddingNewAddressFromSheet = false;
+    
+    let saved = localStorage.getItem('hl_saved_addresses');
+    let currentList = saved ? JSON.parse(saved) : [...defaultSavedAddresses];
+    
+    const newAddr = {
+      label: "Home",
+      icon: "🏠",
+      address: selectedLocationName
+    };
+    currentList.push(newAddr);
+    localStorage.setItem('hl_saved_addresses', JSON.stringify(currentList));
+    
+    closeLocModal();
+    
+    setTimeout(() => {
+      openSavedAddressesSheet();
+    }, 300);
+    return;
+  }
+  
   closeLocModal();
 };
 

@@ -743,13 +743,20 @@
                 <!-- Calculated dynamically -->
             </div>
         </div>
-        <div class="bs-field relative">
-            <div class="bs-label-row">
-                <label>Pickup Address</label>
+        <div class="bs-field">
+            <div class="address-display-card">
+                <div class="adc-header">
+                    <div class="adc-pin-box">
+                        <i data-lucide="map-pin"></i>
+                    </div>
+                    <div class="adc-title-wrap">
+                        <span class="adc-title">Address</span>
+                        <span class="adc-current-value" id="adc-selected-val">No address selected</span>
+                    </div>
+                </div>
+                <input type="hidden" id="bs-address" value=""/>
+                <button type="button" class="btn-purple-select" id="btn-select-address-trigger" onclick="openSavedAddressesSheet()">Select address</button>
             </div>
-            <input type="text" id="bs-address" class="bs-input" placeholder="Enter your address" autocomplete="off"/>
-            <div id="bs-address-suggestions" class="bs-address-suggestions"></div>
-            <div class="saved-chips" id="bs-saved-chips"></div>
         </div>
         <div class="bs-field">
             <label>Preferred Pickup Time</label>
@@ -761,6 +768,28 @@
             </div>
         </div>
         <button class="btn-primary full bs-confirm">Confirm Pickup 🚀</button>
+    </div>
+</div>
+
+<!-- SAVED ADDRESSES BOTTOM SHEET (SNIP 2) -->
+<div id="saved-addresses-overlay" class="overlay hidden" onclick="closeSavedAddressesSheet()"></div>
+<div id="saved-addresses-sheet" class="bottom-sheet saved-addresses-sheet-panel hidden">
+    <div class="bs-handle"></div>
+    <div class="bs-header">
+        <h3 class="bs-title">Saved addresses</h3>
+        <button class="bs-close" onclick="closeSavedAddressesSheet()"><i data-lucide="x"></i></button>
+    </div>
+    <div class="bs-body">
+        <button class="btn-add-address-link" type="button" onclick="triggerAddNewAddress()">
+            <span class="plus-icon-purple">+</span> Add another address
+        </button>
+        
+        <div class="saved-addresses-list-sheet" id="sheet-saved-addresses-list">
+            <!-- Loaded dynamically -->
+        </div>
+    </div>
+    <div class="sheet-footer-fixed">
+        <button class="btn-primary full btn-proceed-address" id="btn-address-proceed" disabled onclick="confirmAddressSelection()">Proceed</button>
     </div>
 </div>
 <!-- LOCATION PICKER MODAL -->

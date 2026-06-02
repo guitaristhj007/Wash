@@ -1367,6 +1367,215 @@ input, select { font-family:inherit; }
   }
 }
 
+/* ── BOOKING ADDRESS REDESIGN (SNIP 1 & 2) ── */
+.address-display-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.adc-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.adc-pin-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #F3F4F6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4B5563;
+  flex-shrink: 0;
+}
+.adc-pin-box i {
+  width: 18px;
+  height: 18px;
+}
+.adc-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+.adc-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.adc-current-value {
+  font-size: 0.76rem;
+  color: var(--sub);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+}
+.btn-purple-select {
+  background: #7C3AED !important;
+  color: #ffffff !important;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-align: center;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+.btn-purple-select:hover {
+  background: #6D28D9 !important;
+  transform: translateY(-1px);
+}
+
+/* Saved Addresses Sheet Panel */
+.saved-addresses-sheet-panel {
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+.saved-addresses-sheet-panel .bs-body {
+  padding-bottom: 80px; /* Space for the fixed sticky footer */
+}
+.btn-add-address-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #7C3AED;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 8px 0 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.plus-icon-purple {
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+.saved-addresses-list-sheet {
+  display: flex;
+  flex-direction: column;
+}
+.address-item-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 36px 16px 0; /* Right padding for the menu dots */
+  border-bottom: 1.5px solid var(--border);
+  cursor: pointer;
+  position: relative;
+  transition: background 0.15s ease;
+}
+.address-item-row:hover {
+  background: var(--primary-light);
+  border-radius: 8px;
+  padding-left: 8px;
+}
+.address-item-row:last-child {
+  border-bottom: none;
+}
+.address-item-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.address-item-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+  text-align: left;
+}
+.address-item-description {
+  font-size: 0.78rem;
+  color: var(--sub);
+  line-height: 1.45;
+  text-align: left;
+}
+.address-radio-circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: all 0.2s ease;
+}
+.address-item-row.selected .address-radio-circle {
+  border-color: #7C3AED;
+}
+.address-radio-circle::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #7C3AED;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: all 0.2s ease;
+}
+.address-item-row.selected .address-radio-circle::after {
+  opacity: 1;
+  transform: scale(1);
+}
+.address-item-menu {
+  position: absolute;
+  right: 8px;
+  top: 14px;
+  font-size: 1.25rem;
+  color: var(--sub);
+  padding: 4px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* Proceed Button styling */
+.sheet-footer-fixed {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 16px 20px;
+  z-index: 10;
+}
+.btn-proceed-address {
+  width: 100%;
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+.btn-proceed-address:disabled {
+  background: #E5E7EB !important;
+  color: #9CA3AF !important;
+  cursor: not-allowed;
+  box-shadow: none !important;
+}
+.btn-proceed-address:not(:disabled) {
+  background: #7C3AED !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.25);
+}
+.btn-proceed-address:not(:disabled):hover {
+  background: #6D28D9 !important;
+  transform: translateY(-1px);
+}
+
 
 
 
