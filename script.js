@@ -188,6 +188,15 @@ let selectedLocationName = "Delhi, India";
 let autocompleteService = null;
 let geocoder = null;
 
+// Catch Google Maps SDK authentication failures globally
+window.gm_authFailure = function() {
+  alert("Google Maps Authentication Failure!\n\nPlease make sure:\n1. Your Google API Key is valid.\n2. Billing is active on your Google Cloud project.\n3. The 'Maps JavaScript API' is enabled on your Google Cloud Console.");
+  const searchInput = document.getElementById('loc-search-input');
+  if (searchInput && searchInput.value === 'Detecting…') {
+    searchInput.value = '';
+  }
+};
+
 // Dynamic script loader for Google Maps SDK
 function loadGoogleMapsScript(callback) {
   if (window.google && window.google.maps) {
@@ -281,10 +290,10 @@ function updateMarkerPos(lat, lng, reverseGeocode = true) {
         geocoder = new google.maps.Geocoder();
       }
       geocoder.geocode({ location: currentCoords }, (results, status) => {
+        const searchInput = document.getElementById('loc-search-input');
         if (status === google.maps.GeocoderStatus.OK && results[0]) {
           selectedLocationName = results[0].formatted_address;
           
-          const searchInput = document.getElementById('loc-search-input');
           if (searchInput) {
             const parts = selectedLocationName.split(',');
             const shortName = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : selectedLocationName;
@@ -297,8 +306,21 @@ function updateMarkerPos(lat, lng, reverseGeocode = true) {
             const shortName = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : selectedLocationName;
             locText.textContent = shortName;
           }
+        } else {
+          console.error("Geocoding failed with status:", status);
+          if (searchInput && searchInput.value === 'Detecting…') {
+            searchInput.value = '';
+          }
+          if (status === 'REQUEST_DENIED') {
+            alert("Google Geocoding API Request Denied!\n\nPlease make sure that the 'Geocoding API' is enabled on your Google Cloud Console for the 'freshwash-auth' project.");
+          }
         }
       });
+    } else {
+      const searchInput = document.getElementById('loc-search-input');
+      if (searchInput && searchInput.value === 'Detecting…') {
+        searchInput.value = '';
+      }
     }
   }
 }
