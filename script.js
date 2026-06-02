@@ -243,6 +243,76 @@ document.querySelector('.bs-confirm').addEventListener('click', () => {
   alert('🚀 Pickup booked! Your order is confirmed.');
 });
 
+// Booking Address Autocomplete
+function initBookingAddressAutocomplete() {
+  const bsAddress = document.getElementById('bs-address');
+  const bsSuggestions = document.getElementById('bs-address-suggestions');
+  if (!bsAddress || !bsSuggestions) return;
+
+  let bsSearchTimeout = null;
+
+  bsAddress.addEventListener('input', () => {
+    clearTimeout(bsSearchTimeout);
+    const query = bsAddress.value.trim();
+    if (query.length < 3) {
+      bsSuggestions.innerHTML = '';
+      return;
+    }
+
+    bsSearchTimeout = setTimeout(() => {
+      loadGoogleMapsScript(() => {
+        if (!autocompleteService && window.google && window.google.maps) {
+          autocompleteService = new google.maps.places.AutocompleteService();
+        }
+        
+        if (!autocompleteService) return;
+
+        autocompleteService.getPlacePredictions({
+          input: query,
+          componentRestrictions: { country: 'in' }
+        }, (predictions, status) => {
+          if (status !== google.maps.places.PlacesServiceStatus.OK || !predictions) {
+            bsSuggestions.innerHTML = '';
+            return;
+          }
+
+          bsSuggestions.innerHTML = '';
+          predictions.forEach(prediction => {
+            const div = document.createElement('div');
+            div.className = 'loc-suggestion';
+            div.innerHTML = `<i data-lucide="map-pin"></i> <span>${prediction.description}</span>`;
+            div.addEventListener('click', () => {
+              bsAddress.value = prediction.description;
+              selectedLocationName = prediction.description;
+              
+              const locText = document.getElementById('loc-text');
+              if (locText) {
+                const parts = selectedLocationName.split(',');
+                const shortName = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : selectedLocationName;
+                locText.textContent = shortName;
+              }
+              
+              geocodePlaceId(prediction.place_id, prediction.description);
+              bsSuggestions.innerHTML = '';
+            });
+            bsSuggestions.appendChild(div);
+          });
+          lucide.createIcons();
+        });
+      });
+    }, 400);
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!bsAddress.contains(e.target) && !bsSuggestions.contains(e.target)) {
+      bsSuggestions.innerHTML = '';
+    }
+  });
+}
+
+// Initialize autocomplete
+initBookingAddressAutocomplete();
+
 // Attach pricing event listeners
 setTimeout(() => {
   document.getElementById('bs-service')?.addEventListener('change', updateBookingPrice);

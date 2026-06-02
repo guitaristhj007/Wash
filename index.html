@@ -455,9 +455,10 @@
                 <!-- Calculated dynamically -->
             </div>
         </div>
-        <div class="bs-field">
+        <div class="bs-field relative">
             <label>Pickup Address</label>
-            <input type="text" id="bs-address" class="bs-input" placeholder="Enter your address"/>
+            <input type="text" id="bs-address" class="bs-input" placeholder="Enter your address" autocomplete="off"/>
+            <div id="bs-address-suggestions" class="bs-address-suggestions"></div>
         </div>
         <div class="bs-field">
             <label>Preferred Pickup Time</label>

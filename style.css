@@ -397,3 +397,26 @@ input, select { font-family:inherit; }
   .profile-header h3 { font-size:1.3rem; }
 }
 
+/* Booking Address Autocomplete Dropdown */
+.bs-field.relative {
+  position: relative;
+}
+.bs-address-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  z-index: 1000;
+  max-height: 180px;
+  overflow-y: auto;
+  margin-top: 4px;
+}
+.bs-address-suggestions:empty {
+  display: none;
+}
+
+
