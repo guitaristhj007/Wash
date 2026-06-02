@@ -792,36 +792,82 @@
         <button class="btn-primary full btn-proceed-address" id="btn-address-proceed" disabled onclick="confirmAddressSelection()">Proceed</button>
     </div>
 </div>
-<!-- LOCATION PICKER MODAL -->
-<div id="loc-overlay" class="overlay hidden" onclick="closeLocModal()"></div>
-<div id="loc-modal" class="loc-modal hidden">
-    <div class="lm-header">
-        <h3>Set your location</h3>
-        <button class="lm-close" onclick="closeLocModal()"><i data-lucide="x"></i></button>
+<!-- ADDRESS SEARCH MODAL (SNIP 1) -->
+<div id="address-search-overlay" class="overlay hidden" onclick="closeAddressSearchModal()"></div>
+<div id="address-search-modal" class="address-search-modal hidden">
+    <div class="asm-header">
+        <button class="asm-close" onclick="closeAddressSearchModal()"><i data-lucide="x"></i></button>
     </div>
-    <div class="lm-tabs">
-        <button class="lm-tab active" id="lm-tab-saved" onclick="switchLocTab('saved')">Saved Addresses</button>
-        <button class="lm-tab" id="lm-tab-new" onclick="switchLocTab('new')">New Location</button>
-    </div>
-    <div id="lm-content-saved" class="lm-tab-content">
-        <div class="modal-saved-addresses" id="modal-saved-list">
-            <!-- Loaded dynamically -->
+    <div class="asm-body">
+        <div class="asm-search-row">
+            <i data-lucide="search" class="asm-search-icon"></i>
+            <input type="text" id="asm-search-input" class="asm-input" placeholder="Search for your location/society/apartment" autocomplete="off"/>
+        </div>
+        <div id="asm-suggestions" class="asm-suggestions"></div>
+        
+        <button class="asm-current-location-btn" onclick="triggerCurrentLocation()">
+            <i data-lucide="locate" class="target-icon"></i> Use current location
+        </button>
+        
+        <div class="asm-recents-section">
+            <h4>Recents</h4>
+            <div class="asm-recents-list" id="asm-recents-list">
+                <div class="asm-recent-item" onclick="selectRecentAddress(0)">
+                    <div class="asm-recent-icon"><i data-lucide="history"></i></div>
+                    <div class="asm-recent-info">
+                        <h5>Studio CREO / BOFFI Studio</h5>
+                        <p>Mandi Road, New Manglapuri, Sultanpur, New Delhi, Delhi, India</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="asm-powered">
+            <img src="https://developers.google.com/static/maps/documentation/images/powered_by_google_on_white.png" alt="powered by Google" class="google-power-img"/>
         </div>
     </div>
-    <div id="lm-content-new" class="lm-tab-content hidden">
-        <div class="lm-search-row">
-            <i data-lucide="search" class="lm-ico"></i>
-            <input type="text" id="loc-search-input" class="lm-input" placeholder="Search area, colony, city…" autocomplete="off"/>
+</div>
+
+<!-- ADDRESS PINPOINT MODAL (SNIP 2) -->
+<div id="address-pinpoint-overlay" class="overlay hidden" onclick="closeAddressPinpointModal()"></div>
+<div id="address-pinpoint-modal" class="address-pinpoint-modal hidden">
+    <div class="apm-header">
+        <button class="apm-close" onclick="closeAddressPinpointModal()"><i data-lucide="x"></i></button>
+    </div>
+    <div class="apm-container">
+        <!-- Left Side: Map -->
+        <div class="apm-map-panel">
+            <div id="apm-map" class="apm-map"></div>
+            <div class="apm-map-tooltip">Place the pin accurately on map</div>
         </div>
-        <div id="loc-suggestions" class="loc-suggestions"></div>
-        <div id="loc-map" class="loc-map"></div>
-        <div class="lm-actions">
-            <button class="lm-detect-btn" onclick="fetchLocation()">
-                <i data-lucide="crosshair"></i> Use current location
-            </button>
-            <button class="btn-primary lm-confirm-btn" onclick="confirmSelectedLocation()">
-                Confirm Location
-            </button>
+        <!-- Right Side: Details Panel -->
+        <div class="apm-details-panel">
+            <div class="apm-header-row">
+                <div class="apm-address-summary">
+                    <h4 id="apm-address-title">Mandi Rd</h4>
+                    <p id="apm-address-description">Mandi Rd, New Manglapuri, Sultanpur, New Delhi, Delhi 110030, India</p>
+                </div>
+                <button class="btn-change-address" onclick="changePinpointAddress()">Change</button>
+            </div>
+            
+            <div class="apm-form">
+                <div class="apm-field">
+                    <input type="text" id="apm-flat-input" class="apm-input-field" placeholder="House/Flat Number*"/>
+                </div>
+                <div class="apm-field">
+                    <input type="text" id="apm-landmark-input" class="apm-input-field" placeholder="Landmark (Optional)"/>
+                </div>
+                
+                <div class="apm-save-as-section">
+                    <span class="save-as-label">Save as</span>
+                    <div class="apm-chips">
+                        <button type="button" class="apm-chip active" id="chip-home" onclick="selectSaveAsTag('Home')">Home</button>
+                        <button type="button" class="apm-chip" id="chip-other" onclick="selectSaveAsTag('Other')">Other</button>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn-primary full btn-save-proceed" id="btn-save-proceed-trigger" disabled onclick="saveAddressAndProceed()">Save and proceed to slots</button>
         </div>
     </div>
 </div>
