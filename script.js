@@ -858,6 +858,51 @@ window.fetchLocation = function() {
   });
 };
 
+// ── Hero Carousel Slider ──
+let currentHeroSlide = 0;
+const heroCarousel = document.getElementById('hero-carousel');
+let heroSlideInterval = null;
+
+window.setHeroSlide = function(index) {
+  if (!heroCarousel) return;
+  currentHeroSlide = index;
+  heroCarousel.style.transform = `translateX(-${index * 50}%)`; // Shift by 50% per slide since container width is 200%
+  
+  // Update indicator dots
+  const indicators = document.querySelectorAll('.indicator');
+  if (indicators) {
+    indicators.forEach((ind, i) => {
+      ind.classList.toggle('active', i === index);
+    });
+  }
+};
+
+function startHeroSlider() {
+  stopHeroSlider();
+  heroSlideInterval = setInterval(() => {
+    let nextIndex = (currentHeroSlide + 1) % 2;
+    setHeroSlide(nextIndex);
+  }, 4000);
+}
+
+function stopHeroSlider() {
+  if (heroSlideInterval) {
+    clearInterval(heroSlideInterval);
+  }
+}
+
+// Start slider once DOM loads
+setTimeout(() => {
+  startHeroSlider();
+  
+  // Pause on hover
+  const container = document.querySelector('.hero-carousel-container');
+  if (container) {
+    container.addEventListener('mouseenter', stopHeroSlider);
+    container.addEventListener('mouseleave', startHeroSlider);
+  }
+}, 1000);
+
 lucide.createIcons();
 
 

@@ -149,19 +149,53 @@
 
         <!-- HOME -->
         <section id="screen-home" class="screen active">
-            <div class="hero-card">
-                <div class="hero-text">
-                    <h2>Fresh clothes,<br>at your door</h2>
-                    <p class="hero-sub">Pickup in 30 min · Delivered in 12 hrs</p>
-                    <button class="btn-book" onclick="openBookingSheet()">
-                        <i data-lucide="package"></i> Book a Pickup
-                    </button>
+            <div class="hero-carousel-container">
+                <div class="hero-carousel" id="hero-carousel">
+                    
+                    <!-- Slide 1: Laundry -->
+                    <div class="hero-slide" id="slide-laundry">
+                        <div class="hero-card laundry-theme">
+                            <div class="hero-text">
+                                <h2>Fresh clothes,<br>at your door</h2>
+                                <p class="hero-sub">Pickup in 30 min · Delivered in 12 hrs</p>
+                                <button class="btn-book" onclick="selectSvcV2('wf')">
+                                    <i data-lucide="package"></i> Book a Pickup
+                                </button>
+                            </div>
+                            <div class="hero-art">
+                                <div class="ha-ring r3"></div>
+                                <div class="ha-ring r2"></div>
+                                <div class="ha-ring r1"></div>
+                                <span class="ha-emoji">🧺</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 2: Car Cleaning -->
+                    <div class="hero-slide" id="slide-car">
+                        <div class="hero-card car-theme">
+                            <div class="hero-text">
+                                <h2>Spotless car,<br>at your doorstep</h2>
+                                <p class="hero-sub">Daily morning clean · Monthly subscription</p>
+                                <button class="btn-book" onclick="selectSvcV2('cc_monthly')">
+                                    <i data-lucide="sparkles"></i> Book Subscription
+                                </button>
+                            </div>
+                            <div class="hero-art">
+                                <div class="ha-ring r3"></div>
+                                <div class="ha-ring r2"></div>
+                                <div class="ha-ring r1"></div>
+                                <span class="ha-emoji">🚗</span>
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
-                <div class="hero-art">
-                    <div class="ha-ring r3"></div>
-                    <div class="ha-ring r2"></div>
-                    <div class="ha-ring r1"></div>
-                    <span class="ha-emoji">🧺</span>
+                
+                <!-- Carousel Indicators -->
+                <div class="carousel-indicators">
+                    <span class="indicator active" onclick="setHeroSlide(0)"></span>
+                    <span class="indicator" onclick="setHeroSlide(1)"></span>
                 </div>
             </div>
 

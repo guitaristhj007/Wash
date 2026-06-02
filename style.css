@@ -806,6 +806,64 @@ input, select { font-family:inherit; }
   background: #154c30;
 }
 
+/* ── HERO SLIDER CAROUSEL ── */
+.hero-carousel-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+.hero-carousel {
+  display: flex;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 200%; /* 2 slides */
+}
+.hero-slide {
+  width: 50%; /* Each slide is 50% of the 200% width, i.e., 100% of container */
+  flex-shrink: 0;
+}
+.hero-carousel-container .hero-card {
+  margin-bottom: 0 !important;
+  border-radius: var(--radius);
+}
+.hero-card.laundry-theme {
+  background: linear-gradient(135deg, #1B5E3B, #2D8A5A);
+}
+.hero-card.car-theme {
+  background: linear-gradient(135deg, #1E3A8A, #3B82F6); /* Premium blue for Car Wash */
+}
+
+/* Indicators */
+.carousel-indicators {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 10;
+}
+.indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.indicator.active {
+  width: 18px;
+  border-radius: 3px;
+  background: #ffffff;
+}
+
+@media(min-width:768px) {
+  .hero-carousel-container {
+    margin-bottom: 32px;
+  }
+}
+
 
 
 
