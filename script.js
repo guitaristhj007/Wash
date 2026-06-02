@@ -189,10 +189,20 @@ function updateBookingPrice() {
     pickupFeeHTML = `<span>₹40</span>`;
   }
   
+  // Calculate weight needed to avoid delivery fee (weight > 3 is free)
+  const needed = 4 - weight;
+  const neededStr = Number.isInteger(needed) ? needed.toString() : needed.toFixed(1);
+  const nudgeHTML = (!isFreePickup && weight > 0)
+    ? `<span class="pb-nudge">Add ${neededStr} more KGs to avoid the Delivery charges.</span>`
+    : '';
+
   breakdownDiv.innerHTML = `
-    <div class="pb-row">
-      <span>${serviceName} (${weight} kg × ₹${rate})</span>
-      <span>₹${subtotal.toFixed(0)}</span>
+    <div class="pb-row pb-main-item">
+      <div class="pb-item-info">
+        <span>${serviceName} (${weight} kg × ₹${rate})</span>
+        ${nudgeHTML}
+      </div>
+      <span class="pb-main-price">₹${subtotal.toFixed(0)}</span>
     </div>
     <div class="pb-row">
       <span class="fee-label">

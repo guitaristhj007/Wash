@@ -641,5 +641,26 @@ input, select { font-family:inherit; }
   transform: translateX(-50%) translateY(0);
 }
 
+/* ── SAVINGS NUDGE LAYOUT ── */
+.pb-row.pb-main-item {
+  align-items: flex-start;
+}
+.pb-item-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+}
+.pb-nudge {
+  font-size: 0.70rem;
+  color: #D97706; /* Warning/informative amber */
+  font-weight: 600;
+  line-height: 1.3;
+}
+.pb-main-price {
+  align-self: flex-start;
+}
+
+
 
 
