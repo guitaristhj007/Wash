@@ -114,7 +114,7 @@
 
     <!-- App Header -->
     <header id="app-header">
-        <div class="hdr-left" id="hdr-location-wrap">
+        <div class="hdr-left">
             <div class="hdr-brand">FreshWash</div>
             <button class="hdr-loc" id="hdr-location" onclick="fetchLocation()">
                 <i data-lucide="map-pin" class="loc-pin"></i>
@@ -122,6 +122,19 @@
                 <i data-lucide="chevron-down" class="loc-chevron"></i>
             </button>
         </div>
+        <!-- Desktop search (hidden on mobile) -->
+        <div class="hdr-search">
+            <i data-lucide="search"></i>
+            <input type="text" placeholder="Search for laundry services…"/>
+        </div>
+        <!-- Desktop nav links (hidden on mobile) -->
+        <nav class="hdr-desktop-nav">
+            <button onclick="switchTab('vendors')">Vendors</button>
+            <button onclick="switchTab('plans')">Plans</button>
+            <button onclick="switchTab('orders')">My Orders</button>
+            <button onclick="switchTab('profile')">Account</button>
+            <button class="btn-book-desktop" onclick="openBookingSheet()">Book Pickup</button>
+        </nav>
         <div class="hdr-right">
             <button class="hdr-icon-btn" aria-label="Notifications">
                 <i data-lucide="bell"></i>
