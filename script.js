@@ -1508,10 +1508,30 @@ window.renderActiveOrders = function() {
   lucide.createIcons();
 };
 
+function initializeHeaderLocation() {
+  const locText = document.getElementById('loc-text');
+  if (!locText) return;
+  
+  let saved = localStorage.getItem('hl_saved_addresses');
+  let addresses = saved ? JSON.parse(saved) : defaultSavedAddresses;
+  
+  if (addresses && addresses.length > 0) {
+    const defaultAddr = addresses[0].address;
+    const parts = defaultAddr.split(',');
+    const shortName = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : defaultAddr;
+    locText.textContent = shortName;
+    selectedLocationName = defaultAddr;
+  } else {
+    locText.textContent = "Delhi, India";
+    selectedLocationName = "Delhi, India";
+  }
+}
+
 // Initialize payment structures & list active orders on startup
 setTimeout(() => {
   setupCardFormatting();
   renderActiveOrders();
+  initializeHeaderLocation();
 }, 200);
 
 lucide.createIcons();
