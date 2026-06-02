@@ -178,12 +178,83 @@ document.querySelector('.bs-confirm').addEventListener('click', () => {
   alert('🚀 Pickup booked! Your order is confirmed.');
 });
 
-// ── Location ──
+// ── Location Modal & Autocomplete ──
+window.openLocModal = function() {
+  document.getElementById('loc-overlay').classList.remove('hidden');
+  document.getElementById('loc-modal').classList.remove('hidden');
+  lucide.createIcons();
+};
+
+window.closeLocModal = function() {
+  document.getElementById('loc-overlay').classList.add('hidden');
+  document.getElementById('loc-modal').classList.add('hidden');
+  document.getElementById('loc-suggestions').innerHTML = '';
+  document.getElementById('loc-search-input').value = '';
+};
+
+// Nominatim Search Suggestions Autocomplete
+let searchTimeout = null;
+const searchInput = document.getElementById('loc-search-input');
+const suggestionsContainer = document.getElementById('loc-suggestions');
+
+if (searchInput) {
+  searchInput.addEventListener('input', () => {
+    clearTimeout(searchTimeout);
+    const query = searchInput.value.trim();
+    if (query.length < 3) {
+      suggestionsContainer.innerHTML = '';
+      return;
+    }
+    
+    // Debounce Nominatim API requests
+    searchTimeout = setTimeout(async () => {
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=in&q=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        
+        suggestionsContainer.innerHTML = '';
+        if (data.length === 0) {
+          suggestionsContainer.innerHTML = '<div class="loc-suggestion">No results found</div>';
+          return;
+        }
+        
+        data.slice(0, 5).forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'loc-suggestion';
+          div.innerHTML = `<i data-lucide="map-pin"></i> <span>${item.display_name}</span>`;
+          div.addEventListener('click', () => {
+            // Pick the display name and update
+            const locText = document.getElementById('loc-text');
+            if (locText) {
+              // Extract a shorter name for the display (e.g., suburb, city)
+              const parts = item.display_name.split(',');
+              const shortName = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : item.display_name;
+              locText.textContent = shortName;
+            }
+            closeLocModal();
+          });
+          suggestionsContainer.appendChild(div);
+        });
+        lucide.createIcons();
+      } catch (err) {
+        console.error('Error fetching location suggestions:', err);
+      }
+    }, 400);
+  });
+}
+
+// Auto-detect current location
 window.fetchLocation = function() {
   const locText = document.getElementById('loc-text');
   if (!locText) return;
   locText.textContent = 'Detecting…';
-  if (!navigator.geolocation) { locText.textContent = 'Location unavailable'; return; }
+  closeLocModal();
+  
+  if (!navigator.geolocation) {
+    locText.textContent = 'Location unavailable';
+    return;
+  }
+  
   navigator.geolocation.getCurrentPosition(async (pos) => {
     try {
       const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json`);
@@ -192,8 +263,13 @@ window.fetchLocation = function() {
       const area = addr.suburb || addr.neighbourhood || addr.city_district || addr.town || addr.city || 'Your area';
       const city = addr.city || addr.town || '';
       locText.textContent = city ? `${area}, ${city}` : area;
-    } catch { locText.textContent = 'Location found'; }
-  }, () => { locText.textContent = 'Enable location'; });
+    } catch {
+      locText.textContent = 'Location found';
+    }
+  }, () => {
+    locText.textContent = 'Enable location';
+  });
 };
 
 lucide.createIcons();
+
