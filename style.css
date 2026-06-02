@@ -1417,8 +1417,8 @@ input, select { font-family:inherit; }
   text-overflow: ellipsis;
   max-width: 250px;
 }
-.btn-purple-select {
-  background: #7C3AED !important;
+.btn-select-address {
+  background: var(--primary) !important;
   color: #ffffff !important;
   border-radius: 10px;
   padding: 12px 20px;
@@ -1427,9 +1427,10 @@ input, select { font-family:inherit; }
   text-align: center;
   transition: all 0.2s ease;
   width: 100%;
+  box-shadow: 0 4px 12px rgba(27, 94, 59, 0.15);
 }
-.btn-purple-select:hover {
-  background: #6D28D9 !important;
+.btn-select-address:hover {
+  background: #14492e !important;
   transform: translateY(-1px);
 }
 
@@ -1446,7 +1447,7 @@ input, select { font-family:inherit; }
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #7C3AED;
+  color: var(--primary);
   font-size: 0.88rem;
   font-weight: 700;
   padding: 8px 0 16px;
@@ -1454,7 +1455,7 @@ input, select { font-family:inherit; }
   background: none;
   cursor: pointer;
 }
-.plus-icon-purple {
+.plus-icon-primary {
   font-size: 1.1rem;
   font-weight: 800;
 }
@@ -1512,14 +1513,14 @@ input, select { font-family:inherit; }
   transition: all 0.2s ease;
 }
 .address-item-row.selected .address-radio-circle {
-  border-color: #7C3AED;
+  border-color: var(--primary);
 }
 .address-radio-circle::after {
   content: '';
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #7C3AED;
+  background: var(--primary);
   opacity: 0;
   transform: scale(0.6);
   transition: all 0.2s ease;
@@ -1567,12 +1568,12 @@ input, select { font-family:inherit; }
   box-shadow: none !important;
 }
 .btn-proceed-address:not(:disabled) {
-  background: #7C3AED !important;
+  background: var(--primary) !important;
   color: #ffffff !important;
-  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.25);
+  box-shadow: 0 4px 14px rgba(27, 94, 59, 0.25);
 }
 .btn-proceed-address:not(:disabled):hover {
-  background: #6D28D9 !important;
+  background: #14492e !important;
   transform: translateY(-1px);
 }
 
@@ -1652,7 +1653,7 @@ input, select { font-family:inherit; }
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #7C3AED;
+  color: var(--primary);
   font-size: 0.88rem;
   font-weight: 700;
   padding: 10px 0;
@@ -1664,7 +1665,7 @@ input, select { font-family:inherit; }
 .asm-current-location-btn i {
   width: 16px;
   height: 16px;
-  color: #7C3AED;
+  color: var(--primary);
 }
 .asm-recents-section {
   margin-top: 24px;
@@ -1848,7 +1849,7 @@ input, select { font-family:inherit; }
   line-height: 1.45;
 }
 .btn-change-address {
-  color: #7C3AED;
+  color: var(--primary);
   font-size: 0.82rem;
   font-weight: 700;
   background: none;
@@ -1883,7 +1884,7 @@ input, select { font-family:inherit; }
   transition: border-color 0.15s ease;
 }
 .apm-input-field:focus {
-  border-color: #7C3AED;
+  border-color: var(--primary);
 }
 .apm-save-as-section {
   display: flex;
@@ -1912,9 +1913,9 @@ input, select { font-family:inherit; }
   transition: all 0.15s ease;
 }
 .apm-chip.active {
-  border-color: #111827;
-  background: #F3F4F6;
-  color: #111827;
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary);
 }
 
 /* Proceed button Snip 2 */
@@ -1934,12 +1935,12 @@ input, select { font-family:inherit; }
   box-shadow: none !important;
 }
 .btn-save-proceed:not(:disabled) {
-  background: #7C3AED !important;
+  background: var(--primary) !important;
   color: #ffffff !important;
-  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.25);
+  box-shadow: 0 4px 14px rgba(27, 94, 59, 0.25);
 }
 .btn-save-proceed:not(:disabled):hover {
-  background: #6D28D9 !important;
+  background: #14492e !important;
   transform: translateY(-1px);
 }
 
