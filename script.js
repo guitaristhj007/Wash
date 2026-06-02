@@ -1267,7 +1267,6 @@ window.processPayment = function() {
     "currency": "INR",
     "name": "HouseLoop",
     "description": `Payment for ${o.serviceName} (${o.orderId})`,
-    "image": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231B5E3B'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='38' font-weight='900' fill='white' font-family='Arial'%3E%E2%88%9E%3C/text%3E%3C/svg%3E",
     "handler": function (response) {
       const loader = document.getElementById('payment-loader-overlay');
       const title = document.getElementById('payment-loader-title');
