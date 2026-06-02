@@ -882,7 +882,7 @@ function startHeroSlider() {
   heroSlideInterval = setInterval(() => {
     let nextIndex = (currentHeroSlide + 1) % 2;
     setHeroSlide(nextIndex);
-  }, 4000);
+  }, 3000);
 }
 
 function stopHeroSlider() {
