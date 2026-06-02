@@ -236,6 +236,10 @@ function initMap() {
   loadGoogleMapsScript(() => {
     if (map) {
       google.maps.event.trigger(map, "resize");
+      map.setCenter(currentCoords);
+      if (marker) {
+        marker.setPosition(currentCoords);
+      }
       return;
     }
 
