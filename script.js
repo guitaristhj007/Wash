@@ -310,8 +310,101 @@ function initBookingAddressAutocomplete() {
   });
 }
 
-// Initialize autocomplete
+// Booking Address Saved Options Manager
+const defaultSavedAddresses = [
+  { label: "Home", icon: "🏠", address: "12, Ground Floor, Vasant Kunj, New Delhi, 110070" },
+  { label: "Work", icon: "💼", address: "Tech Park, Phase 2, Okhla Industrial Area, New Delhi, 110020" },
+  { label: "Studio", icon: "🎨", address: "Studio CREO / BOFFI Studio, Mandi Road, New Manglapuri, New Delhi, 110030" }
+];
+
+function initSavedAddresses() {
+  const chipsContainer = document.getElementById('bs-saved-chips');
+  if (!chipsContainer) return;
+  
+  function renderChips() {
+    let saved = localStorage.getItem('hl_saved_addresses');
+    let addresses = saved ? JSON.parse(saved) : defaultSavedAddresses;
+    
+    chipsContainer.innerHTML = '';
+    
+    addresses.forEach(addr => {
+      const btn = document.createElement('button');
+      btn.className = 'saved-chip';
+      btn.type = 'button';
+      btn.innerHTML = `<span>${addr.icon}</span> ${addr.label}`;
+      btn.title = addr.address;
+      
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        const bsAddress = document.getElementById('bs-address');
+        if (bsAddress) {
+          bsAddress.value = addr.address;
+          selectedLocationName = addr.address;
+          
+          const locText = document.getElementById('loc-text');
+          if (locText) {
+            const parts = selectedLocationName.split(',');
+            const shortName = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : selectedLocationName;
+            locText.textContent = shortName;
+          }
+          
+          loadGoogleMapsScript(() => {
+            if (!geocoder) geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ address: addr.address }, (results, status) => {
+              if (status === google.maps.GeocoderStatus.OK && results[0]) {
+                const location = results[0].geometry.location;
+                updateMarkerPos(location.lat(), location.lng(), false);
+              }
+            });
+          });
+        }
+        
+        document.querySelectorAll('.saved-chip').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+      });
+      chipsContainer.appendChild(btn);
+    });
+    
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'saved-chip save-current-btn';
+    saveBtn.type = 'button';
+    saveBtn.innerHTML = `<i data-lucide="plus" style="width:12px;height:12px;"></i> Save Current`;
+    saveBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const bsAddress = document.getElementById('bs-address');
+      if (!bsAddress || !bsAddress.value.trim() || bsAddress.value === 'Detecting…') {
+        alert('Please enter an address first to save it.');
+        return;
+      }
+      const label = prompt('Enter a label for this address (e.g. Home, Work, Studio, Gym):');
+      if (!label) return;
+      
+      const icon = prompt('Enter an emoji or icon (default: 📍):') || '📍';
+      
+      const newAddr = {
+        label: label.trim(),
+        icon: icon.trim(),
+        address: bsAddress.value.trim()
+      };
+      
+      let saved = localStorage.getItem('hl_saved_addresses');
+      let currentList = saved ? JSON.parse(saved) : [...defaultSavedAddresses];
+      currentList.push(newAddr);
+      localStorage.setItem('hl_saved_addresses', JSON.stringify(currentList));
+      
+      renderChips();
+    });
+    chipsContainer.appendChild(saveBtn);
+    lucide.createIcons();
+  }
+  
+  renderChips();
+}
+
+// Initialize autocomplete & saved addresses
 initBookingAddressAutocomplete();
+initSavedAddresses();
 
 // Attach pricing event listeners
 setTimeout(() => {

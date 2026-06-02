@@ -419,4 +419,47 @@ input, select { font-family:inherit; }
   display: none;
 }
 
+/* Booking Address Saved Options */
+.bs-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.bs-label-row label {
+  margin-bottom: 0 !important;
+}
+.saved-chips {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+.saved-chip {
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+.saved-chip:hover, .saved-chip.active {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary);
+}
+.saved-chip i {
+  color: var(--primary);
+  flex-shrink: 0;
+}
+.save-current-btn {
+  border-style: dashed;
+}
+
 
