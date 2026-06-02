@@ -117,7 +117,7 @@
     <header id="app-header">
         <div class="hdr-left">
             <div class="hdr-brand"><span class="brand-loop">∞</span> HouseLoop</div>
-            <button class="hdr-loc" id="hdr-location" onclick="fetchLocation()">
+            <button class="hdr-loc" id="hdr-location" onclick="openLocModal()">
                 <i data-lucide="map-pin" class="loc-pin"></i>
                 <span id="loc-text">Detecting…</span>
                 <i data-lucide="chevron-down" class="loc-chevron"></i>
@@ -472,6 +472,22 @@
         </div>
         <button class="btn-primary full bs-confirm">Confirm Pickup 🚀</button>
     </div>
+</div>
+<!-- LOCATION PICKER MODAL -->
+<div id="loc-overlay" class="overlay hidden" onclick="closeLocModal()"></div>
+<div id="loc-modal" class="loc-modal hidden">
+    <div class="lm-header">
+        <h3>Set your location</h3>
+        <button class="lm-close" onclick="closeLocModal()"><i data-lucide="x"></i></button>
+    </div>
+    <div class="lm-search-row">
+        <i data-lucide="search" class="lm-ico"></i>
+        <input type="text" id="loc-search-input" class="lm-input" placeholder="Search area, colony, city…" autocomplete="off"/>
+    </div>
+    <div id="loc-suggestions" class="loc-suggestions"></div>
+    <button class="lm-detect-btn" onclick="fetchLocation()">
+        <i data-lucide="crosshair"></i> Use my current location
+    </button>
 </div>
 
 <script type="module" src="script.js"></script>
