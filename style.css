@@ -173,8 +173,12 @@ input, select { font-family:inherit; }
 
 /* ── BOOKING SHEET ── */
 .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:100; }
-.bottom-sheet { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:var(--surface); border-radius:20px 20px 0 0; z-index:101; padding:16px 20px 32px; transition:transform .3s ease; }
+.bottom-sheet { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:var(--surface); border-radius:20px 20px 0 0; z-index:101; padding:16px 20px 24px; transition:transform .3s ease; max-height:90vh; display:flex; flex-direction:column; }
 .bottom-sheet.hidden { transform:translateX(-50%) translateY(100%); }
+.bs-body { flex:1; overflow-y:auto; padding-right:4px; margin-top:4px; }
+.bs-body::-webkit-scrollbar { width:6px; }
+.bs-body::-webkit-scrollbar-track { background:transparent; }
+.bs-body::-webkit-scrollbar-thumb { background:rgba(0,0,0,0.15); border-radius:3px; }
 .bs-handle { width:36px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 18px; }
 .bs-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
 .bs-title { font-size:1.05rem; font-weight:800; margin-bottom:0; }
