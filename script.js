@@ -159,8 +159,8 @@ window.selectSvc = function(el) {
     updateBookingPrice();
   }
   
-  // Immediately open the booking sheet
-  openBookingSheet();
+  // Immediately open the booking sheet and lock the service selection
+  openBookingSheet(true);
 };
 
 // Dynamic Pricing Calculation for Booking Sheet
@@ -206,11 +206,10 @@ function updateBookingPrice() {
 }
 
 // ── Booking Sheet ──
-window.openBookingSheet = function() {
+window.openBookingSheet = function(lockService = false) {
   document.getElementById('booking-overlay').classList.remove('hidden');
   const sheet = document.getElementById('booking-sheet');
   sheet.classList.remove('hidden');
-  sheet.style.transform = 'translateX(-50%) translateY(0)';
   
   const addressInput = document.getElementById('bs-address');
   if (addressInput && selectedLocationName && selectedLocationName !== "Detecting…" && selectedLocationName !== "Delhi, India") {
@@ -224,6 +223,11 @@ window.openBookingSheet = function() {
     if (svc === 'wf' || svc === 'wi') {
       serviceSelect.value = svc;
     }
+  }
+
+  // Lock service dropdown if opened via a specific service card
+  if (serviceSelect) {
+    serviceSelect.disabled = lockService;
   }
 
   updateBookingPrice();

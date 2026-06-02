@@ -403,6 +403,33 @@ input, select { font-family:inherit; }
   .profile-section { border-radius:20px; }
   .profile-avatar { width:80px; height:80px; }
   .profile-header h3 { font-size:1.3rem; }
+
+  /* Centered Booking Modal on Desktop */
+  .bottom-sheet {
+    top: 50%;
+    bottom: auto;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    border-radius: 20px;
+    max-height: 85vh;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+  .bottom-sheet:not(.hidden) {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    pointer-events: all;
+  }
+  .bottom-sheet.hidden {
+    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .bs-handle {
+    display: none;
+  }
 }
 
 /* Booking Address Autocomplete Dropdown */
