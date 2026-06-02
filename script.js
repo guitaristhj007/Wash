@@ -860,13 +860,13 @@ window.fetchLocation = function() {
 
 // ── Hero Carousel Slider ──
 let currentHeroSlide = 0;
-const heroCarousel = document.getElementById('hero-carousel');
 let heroSlideInterval = null;
 
 window.setHeroSlide = function(index) {
-  if (!heroCarousel) return;
+  const carousel = document.getElementById('hero-carousel');
+  if (!carousel) return;
   currentHeroSlide = index;
-  heroCarousel.style.transform = `translateX(-${index * 50}%)`; // Shift by 50% per slide since container width is 200%
+  carousel.style.transform = `translateX(-${index * 50}%)`; // Shift by 50% per slide since container width is 200%
   
   // Update indicator dots
   const indicators = document.querySelectorAll('.indicator');
