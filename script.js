@@ -44,6 +44,9 @@ function showApp(user) {
   lucide.createIcons();
   fetchLocation();
   updateProfile(user);
+  if (typeof renderActiveOrders === 'function') {
+    renderActiveOrders();
+  }
 }
 
 function updateProfile(user) {
@@ -134,8 +137,17 @@ document.getElementById('btn-logout').addEventListener('click', async () => {
 window.switchTab = function(tab) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('screen-' + tab).classList.add('active');
-  document.getElementById('nav-' + tab).classList.add('active');
+  
+  const targetScreen = document.getElementById('screen-' + tab);
+  if (targetScreen) {
+    targetScreen.classList.add('active');
+  }
+  
+  const targetNav = document.getElementById('nav-' + tab);
+  if (targetNav) {
+    targetNav.classList.add('active');
+  }
+  
   lucide.createIcons();
 };
 
@@ -305,8 +317,75 @@ document.querySelectorAll('.ts').forEach(btn => {
 });
 
 document.querySelector('.bs-confirm').addEventListener('click', () => {
+  const address = document.getElementById('bs-address').value.trim();
+  if (!address || address === 'Detecting…') {
+    alert('Please enter or select a pickup address first.');
+    return;
+  }
+
+  const service = document.getElementById('bs-service').value;
+  const isLaundry = service === 'wf' || service === 'wi' || service === 'sp';
+  let weight = 0;
+  if (isLaundry) {
+    weight = parseFloat(document.getElementById('bs-weight').value) || 0;
+    if (weight <= 0) {
+      alert('Please enter a valid weight (minimum 1 kg).');
+      return;
+    }
+  }
+
+  const activeSlotBtn = document.querySelector('.time-slots .ts.active');
+  const slot = activeSlotBtn ? activeSlotBtn.textContent : 'Now';
+
+  let rate = 0;
+  let serviceName = '';
+  let subtotal = 0;
+  let pickupFee = 40;
+
+  if (service === 'wf') {
+    rate = 69;
+    serviceName = 'Wash & Fold';
+    subtotal = weight * rate;
+    if (weight > 3) pickupFee = 0;
+  } else if (service === 'wi') {
+    rate = 89;
+    serviceName = 'Wash & Iron';
+    subtotal = weight * rate;
+    if (weight > 3) pickupFee = 0;
+  } else if (service === 'sp') {
+    rate = 39;
+    serviceName = 'Steam Press Only';
+    subtotal = weight * rate;
+    if (weight > 3) pickupFee = 0;
+  } else if (service === 'cc_monthly') {
+    rate = 999;
+    serviceName = 'Car cleaning Subscription';
+    subtotal = rate;
+    pickupFee = 0;
+  } else if (service === 'cc_daily') {
+    rate = 149;
+    serviceName = 'Daily Car cleaning';
+    subtotal = rate;
+    pickupFee = 0;
+  }
+
+  const total = subtotal + pickupFee;
+  const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+
+  window.pendingOrder = {
+    orderId: orderId,
+    service: service,
+    serviceName: serviceName,
+    weight: weight,
+    subtotal: subtotal,
+    pickupFee: pickupFee,
+    address: address,
+    slot: slot,
+    total: total
+  };
+
   closeBookingSheet();
-  alert('🚀 Pickup booked! Your order is confirmed.');
+  showPaymentPage();
 });
 
 // Booking Address Autocomplete
@@ -902,6 +981,416 @@ setTimeout(() => {
     container.addEventListener('mouseleave', startHeroSlider);
   }
 }, 1000);
+
+// ── Checkout & Payment Page Logic ──
+window.selectedPaymentMethod = null;
+window.selectedUPIApp = null;
+
+window.showPaymentPage = function() {
+  const o = window.pendingOrder;
+  if (!o) return;
+  
+  // Summary
+  document.getElementById('pay-summary-service').textContent = o.serviceName;
+  
+  const weightRow = document.getElementById('pay-summary-weight-row');
+  const isLaundry = o.service === 'wf' || o.service === 'wi' || o.service === 'sp';
+  if (isLaundry) {
+    weightRow.classList.remove('hidden');
+    document.getElementById('pay-summary-weight').textContent = `${o.weight} kg`;
+  } else {
+    weightRow.classList.add('hidden');
+  }
+  
+  document.getElementById('pay-summary-address').textContent = o.address;
+  document.getElementById('pay-summary-address').title = o.address;
+  document.getElementById('pay-summary-time').textContent = o.slot;
+  
+  // Breakdown
+  document.getElementById('pay-breakdown-subtotal').textContent = `₹${o.subtotal.toFixed(0)}`;
+  
+  const delSpan = document.getElementById('pay-breakdown-delivery');
+  if (o.pickupFee === 0) {
+    delSpan.innerHTML = `<span class="pb-original-fee" style="margin-right:4px;">₹40</span><span class="pb-free-tag">Free</span>`;
+  } else {
+    delSpan.textContent = `₹${o.pickupFee.toFixed(0)}`;
+  }
+  
+  document.getElementById('pay-breakdown-total').textContent = `₹${o.total.toFixed(0)}`;
+  
+  // Button Label
+  const submitBtn = document.getElementById('btn-pay-submit');
+  submitBtn.innerHTML = `<i data-lucide="lock" style="width: 16px; height: 16px; margin-right: 4px;"></i> Securely Confirm &amp; Pay ₹${o.total.toFixed(0)}`;
+  
+  // Reset payment selection accordion
+  document.querySelectorAll('.pay-method-item').forEach(item => {
+    item.classList.remove('active-method');
+    const body = item.querySelector('.pay-method-body');
+    if (body) body.classList.add('hidden');
+  });
+  window.selectedPaymentMethod = null;
+  window.selectedUPIApp = null;
+  
+  // Reset forms
+  const upiIdInput = document.getElementById('pay-upi-id');
+  if (upiIdInput) upiIdInput.value = '';
+  const upiMsg = document.getElementById('upi-verify-msg');
+  if (upiMsg) { upiMsg.textContent = ''; upiMsg.className = 'upi-status-msg'; }
+  const verifyBtn = document.getElementById('btn-upi-verify');
+  if (verifyBtn) { verifyBtn.textContent = 'Verify'; verifyBtn.className = 'btn-upi-verify'; }
+  
+  const cardNumber = document.getElementById('pay-card-number');
+  if (cardNumber) cardNumber.value = '';
+  const cardExpiry = document.getElementById('pay-card-expiry');
+  if (cardExpiry) cardExpiry.value = '';
+  const cardCvv = document.getElementById('pay-card-cvv');
+  if (cardCvv) cardCvv.value = '';
+  const cardBrand = document.getElementById('card-brand-icon');
+  if (cardBrand) cardBrand.textContent = '💳';
+  
+  switchTab('payment');
+  lucide.createIcons();
+};
+
+window.togglePaymentAccordion = function(method) {
+  const targetItem = document.getElementById(`method-${method}`);
+  if (!targetItem) return;
+  
+  const isActive = targetItem.classList.contains('active-method');
+  
+  document.querySelectorAll('.pay-method-item').forEach(item => {
+    item.classList.remove('active-method');
+    const body = item.querySelector('.pay-method-body');
+    if (body) body.classList.add('hidden');
+  });
+  
+  if (!isActive) {
+    targetItem.classList.add('active-method');
+    const body = targetItem.querySelector('.pay-method-body');
+    if (body) body.classList.remove('hidden');
+    window.selectedPaymentMethod = method;
+  } else {
+    window.selectedPaymentMethod = null;
+  }
+};
+
+window.selectUPIApp = function(app) {
+  document.querySelectorAll('.upi-app-btn').forEach(btn => btn.classList.remove('selected'));
+  
+  if (window.selectedUPIApp === app) {
+    window.selectedUPIApp = null;
+  } else {
+    const clickedBtn = document.querySelector(`.upi-app-btn[onclick*="${app}"]`);
+    if (clickedBtn) clickedBtn.classList.add('selected');
+    window.selectedUPIApp = app;
+  }
+};
+
+window.verifyCustomUPI = function() {
+  const upiId = document.getElementById('pay-upi-id').value.trim();
+  const upiMsg = document.getElementById('upi-verify-msg');
+  const verifyBtn = document.getElementById('btn-upi-verify');
+  if (!upiId) {
+    alert('Please enter a UPI ID first.');
+    return;
+  }
+  
+  const upiRegex = /^[\w.\-_]{3,256}@[a-zA-Z]{3,64}$/;
+  if (!upiRegex.test(upiId)) {
+    upiMsg.textContent = '❌ Invalid UPI ID format. E.g. name@bank';
+    upiMsg.className = 'upi-status-msg error';
+    return;
+  }
+  
+  verifyBtn.disabled = true;
+  verifyBtn.textContent = 'Verifying…';
+  upiMsg.textContent = 'Validating address...';
+  upiMsg.className = 'upi-status-msg';
+  
+  setTimeout(() => {
+    verifyBtn.disabled = false;
+    verifyBtn.textContent = 'Verified ✓';
+    verifyBtn.className = 'btn-upi-verify verified';
+    upiMsg.textContent = '✓ UPI ID Verified (Harsh Jain)';
+    upiMsg.className = 'upi-status-msg success';
+  }, 1000);
+};
+
+// Credit Card Fields Formatting & Type Detection
+function formatCardNumber(value) {
+  const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+  const matches = v.match(/\d{4,16}/g);
+  const match = matches && matches[0] || '';
+  const parts = [];
+
+  for (let i = 0, len = match.length; i < len; i += 4) {
+    parts.push(match.substring(i, i + 4));
+  }
+
+  if (parts.length > 0) {
+    return parts.join(' ');
+  } else {
+    return v;
+  }
+}
+
+function detectCardType(number) {
+  const cleanNum = number.replace(/\s+/g, '');
+  if (/^4/.test(cleanNum)) return 'visa';
+  if (/^5[1-5]/.test(cleanNum)) return 'mastercard';
+  if (/^(508[5-9]|60[6-8]|6521)/.test(cleanNum)) return 'rupay';
+  return 'unknown';
+}
+
+function formatCardExpiry(value) {
+  const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+  if (v.length >= 2) {
+    return v.substring(0, 2) + '/' + v.substring(2, 4);
+  }
+  return v;
+}
+
+function setupCardFormatting() {
+  const cardNumInput = document.getElementById('pay-card-number');
+  const cardExpiryInput = document.getElementById('pay-card-expiry');
+  const cardCvvInput = document.getElementById('pay-card-cvv');
+  const cardBrandIcon = document.getElementById('card-brand-icon');
+
+  if (cardNumInput) {
+    cardNumInput.addEventListener('input', (e) => {
+      const formatted = formatCardNumber(e.target.value);
+      e.target.value = formatted;
+      
+      const type = detectCardType(formatted);
+      if (type === 'visa') cardBrandIcon.textContent = '💳 Visa';
+      else if (type === 'mastercard') cardBrandIcon.textContent = '💳 MasterCard';
+      else if (type === 'rupay') cardBrandIcon.textContent = '💳 RuPay';
+      else cardBrandIcon.textContent = '💳';
+    });
+  }
+
+  if (cardExpiryInput) {
+    cardExpiryInput.addEventListener('input', (e) => {
+      e.target.value = formatCardExpiry(e.target.value);
+    });
+  }
+
+  if (cardCvvInput) {
+    cardCvvInput.addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    });
+  }
+}
+
+// Payment Simulator and Action Submit
+window.processPayment = function() {
+  const method = window.selectedPaymentMethod;
+  if (!method) {
+    alert('Please choose a payment method to proceed.');
+    return;
+  }
+  
+  if (method === 'upi') {
+    const upiId = document.getElementById('pay-upi-id').value.trim();
+    if (!window.selectedUPIApp && !upiId) {
+      alert('Please select a UPI App or enter a valid UPI ID.');
+      return;
+    }
+    if (upiId && !document.getElementById('btn-upi-verify').classList.contains('verified')) {
+      alert('Please verify your Custom UPI ID first.');
+      return;
+    }
+  } else if (method === 'card') {
+    const cardNum = document.getElementById('pay-card-number').value.replace(/\s+/g, '');
+    const expiry = document.getElementById('pay-card-expiry').value;
+    const cvv = document.getElementById('pay-card-cvv').value;
+    
+    if (cardNum.length < 15 || cardNum.length > 16) {
+      alert('Please enter a valid credit card number.');
+      return;
+    }
+    if (expiry.length < 5 || !expiry.includes('/')) {
+      alert('Please enter card expiry date (MM/YY).');
+      return;
+    }
+    const expParts = expiry.split('/');
+    const mm = parseInt(expParts[0]);
+    const yy = parseInt(expParts[1]);
+    if (isNaN(mm) || mm < 1 || mm > 12 || isNaN(yy) || yy < 26) {
+      alert('Please enter a valid expiry date (expiry cannot be in the past).');
+      return;
+    }
+    if (cvv.length < 3) {
+      alert('Please enter a valid 3-digit CVV code.');
+      return;
+    }
+  }
+  
+  // Show gateway loading states
+  const loader = document.getElementById('payment-loader-overlay');
+  const title = document.getElementById('payment-loader-title');
+  const sub = document.getElementById('payment-loader-sub');
+  
+  loader.classList.remove('hidden');
+  
+  title.textContent = 'Securing Connection...';
+  sub.textContent = 'Establishing secure SSL gateway tunnel';
+  
+  setTimeout(() => {
+    title.textContent = 'Authorizing with Bank...';
+    sub.textContent = 'Contacting payment server & validating assets';
+    
+    setTimeout(() => {
+      title.textContent = 'Finalizing Order...';
+      sub.textContent = 'Writing transaction ledger and booking pickup';
+      
+      setTimeout(() => {
+        loader.classList.add('hidden');
+        completeCheckout();
+      }, 1000);
+    }, 1200);
+  }, 1000);
+};
+
+function completeCheckout() {
+  const o = window.pendingOrder;
+  if (!o) return;
+  
+  const newOrder = {
+    orderId: o.orderId,
+    serviceCode: o.service,
+    serviceName: o.serviceName,
+    weight: o.weight,
+    total: o.total,
+    address: o.address,
+    slot: o.slot,
+    date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+    status: 'Confirmed',
+    steps: ['Confirmed', 'At vendor', 'Cleaning', 'Delivered'],
+    currentStep: 0,
+    eta: 'Today, within 2 hours'
+  };
+  
+  let orders = [];
+  try {
+    const saved = localStorage.getItem('hl_active_orders');
+    if (saved) orders = JSON.parse(saved);
+  } catch(e) {}
+  
+  orders.unshift(newOrder);
+  localStorage.setItem('hl_active_orders', JSON.stringify(orders));
+  
+  document.getElementById('success-order-id').textContent = '#' + o.orderId;
+  document.getElementById('success-service-name').textContent = o.serviceName;
+  document.getElementById('success-total-paid').textContent = `₹${o.total.toFixed(0)}`;
+  
+  document.getElementById('payment-success-overlay').classList.remove('hidden');
+  
+  renderActiveOrders();
+  lucide.createIcons();
+}
+
+window.goToTracking = function() {
+  document.getElementById('payment-success-overlay').classList.add('hidden');
+  switchTab('orders');
+  
+  const activeTabBtn = document.querySelector('.otab');
+  if (activeTabBtn) {
+    switchOrderTab(activeTabBtn, 'active');
+  }
+};
+
+// ── Dynamic Active Orders Rendering ──
+const defaultActiveOrders = [
+  {
+    orderId: "ORD-2841",
+    serviceCode: "wi",
+    serviceName: "Wash & Iron",
+    weight: 3,
+    total: 307,
+    status: "At vendor",
+    eta: "Est. delivery: Tomorrow, 6–8 PM",
+    currentStep: 1,
+    steps: ["Picked up", "At vendor", "Cleaning", "Delivered"]
+  }
+];
+
+window.renderActiveOrders = function() {
+  const container = document.getElementById('orders-active');
+  if (!container) return;
+  
+  let orders = [];
+  try {
+    const saved = localStorage.getItem('hl_active_orders');
+    if (saved) {
+      orders = JSON.parse(saved);
+    } else {
+      orders = [...defaultActiveOrders];
+      localStorage.setItem('hl_active_orders', JSON.stringify(orders));
+    }
+  } catch(e) {
+    orders = [...defaultActiveOrders];
+  }
+  
+  if (orders.length === 0) {
+    container.innerHTML = `<p style="font-size:0.86rem;color:var(--sub);text-align:center;padding:40px 0;">No active orders.</p>`;
+    return;
+  }
+  
+  let html = '';
+  orders.forEach(o => {
+    const s0Done = o.currentStep >= 0 ? 'done' : '';
+    const s0Icon = o.currentStep >= 0 ? '<div class="t-dot"><i data-lucide="check" class="t-check"></i></div>' : '<div class="t-dot"></div>';
+    
+    const s1Done = o.currentStep >= 1 ? 'done' : '';
+    const s1Icon = o.currentStep >= 1 ? '<div class="t-dot"><i data-lucide="check" class="t-check"></i></div>' : '<div class="t-dot"></div>';
+    const line1Done = o.currentStep >= 1 ? 'done' : '';
+    
+    const s2Done = o.currentStep >= 2 ? 'done' : '';
+    const s2Icon = o.currentStep >= 2 ? '<div class="t-dot"><i data-lucide="check" class="t-check"></i></div>' : '<div class="t-dot"></div>';
+    const line2Done = o.currentStep >= 2 ? 'done' : '';
+    
+    const s3Done = o.currentStep >= 3 ? 'done' : '';
+    const s3Icon = o.currentStep >= 3 ? '<div class="t-dot"><i data-lucide="check" class="t-check"></i></div>' : '<div class="t-dot"></div>';
+    const line3Done = o.currentStep >= 3 ? 'done' : '';
+    
+    const isLaundry = o.serviceCode === 'wf' || o.serviceCode === 'wi' || o.serviceCode === 'sp';
+    const detailStr = isLaundry 
+      ? `${o.serviceName} · ${o.weight} kg · ₹${o.total.toFixed(0)}`
+      : `${o.serviceName} · ₹${o.total.toFixed(0)}`;
+      
+    const statusLabel = o.status || 'Confirmed';
+    
+    html += `
+      <div class="order-card">
+          <div class="oc-top">
+              <span class="ao-id">#${o.orderId}</span>
+              <span class="status-pill at-vendor">${statusLabel}</span>
+          </div>
+          <p class="oc-detail">${detailStr}</p>
+          <div class="tracker">
+              <div class="t-step ${s0Done}">${s0Icon}<span>Picked up</span></div>
+              <div class="t-line ${line1Done}"></div>
+              <div class="t-step ${s1Done}">${s1Icon}<span>At vendor</span></div>
+              <div class="t-line ${line2Done}"></div>
+              <div class="t-step ${s2Done}">${s2Icon}<span>Cleaning</span></div>
+              <div class="t-line ${line3Done}"></div>
+              <div class="t-step ${s3Done}">${s3Icon}<span>Delivered</span></div>
+          </div>
+          <p class="ao-eta">${o.eta}</p>
+      </div>
+    `;
+  });
+  
+  container.innerHTML = html;
+  lucide.createIcons();
+};
+
+// Initialize payment structures & list active orders on startup
+setTimeout(() => {
+  setupCardFormatting();
+  renderActiveOrders();
+}, 200);
 
 lucide.createIcons();
 

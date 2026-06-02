@@ -481,6 +481,167 @@
             <div class="scr-pad"></div>
         </section>
 
+        <!-- PAYMENT / CHECKOUT -->
+        <section id="screen-payment" class="screen">
+            <div class="pay-header">
+                <button class="btn-pay-back" onclick="switchTab('home')">
+                    <i data-lucide="arrow-left"></i>
+                </button>
+                <h3>Checkout &amp; Payment</h3>
+                <div style="width: 32px;"></div>
+            </div>
+
+            <!-- Order Summary Card -->
+            <div class="pay-summary-card">
+                <h4 class="pay-card-title"><i data-lucide="shopping-bag"></i> Order Summary</h4>
+                <div class="pay-summary-details">
+                    <div class="pay-summary-row">
+                        <span class="pay-summary-label">Service</span>
+                        <span id="pay-summary-service" class="pay-summary-val">-</span>
+                    </div>
+                    <div id="pay-summary-weight-row" class="pay-summary-row">
+                        <span class="pay-summary-label">Weight</span>
+                        <span id="pay-summary-weight" class="pay-summary-val">-</span>
+                    </div>
+                    <div class="pay-summary-row">
+                        <span class="pay-summary-label">Pickup Address</span>
+                        <span id="pay-summary-address" class="pay-summary-val">-</span>
+                    </div>
+                    <div class="pay-summary-row">
+                        <span class="pay-summary-label">Pickup Time</span>
+                        <span id="pay-summary-time" class="pay-summary-val">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price Breakdown Card -->
+            <div class="pay-breakdown-card">
+                <h4 class="pay-card-title"><i data-lucide="receipt"></i> Bill Details</h4>
+                <div class="pay-breakdown-details">
+                    <div class="pay-breakdown-row">
+                        <span>Items Subtotal</span>
+                        <span id="pay-breakdown-subtotal">₹0</span>
+                    </div>
+                    <div class="pay-breakdown-row">
+                        <span class="fee-label">
+                            Pickup and Delivery fee
+                            <span class="tooltip-container">
+                                <i data-lucide="info" class="info-icon"></i>
+                                <span class="tooltip-text">this fee goes to Delivery boy for their efforts</span>
+                            </span>
+                        </span>
+                        <span id="pay-breakdown-delivery">₹0</span>
+                    </div>
+                    <div class="pay-breakdown-row pay-total-row">
+                        <span>Total Payable</span>
+                        <span id="pay-breakdown-total">₹0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Methods Card -->
+            <div class="pay-methods-card">
+                <h4 class="pay-card-title"><i data-lucide="shield-check"></i> Choose Payment Method</h4>
+                <div class="pay-methods-list">
+                    <!-- UPI Option Accordion -->
+                    <div class="pay-method-item" id="method-upi">
+                        <div class="pay-method-header" onclick="togglePaymentAccordion('upi')">
+                            <div class="pm-title-wrap">
+                                <span class="pm-icon">📱</span>
+                                <div>
+                                    <h5>UPI Apps / Custom ID</h5>
+                                    <p>Google Pay, PhonePe, Paytm, BHIM</p>
+                                </div>
+                            </div>
+                            <i data-lucide="chevron-down" class="pm-chevron"></i>
+                        </div>
+                        <div class="pay-method-body hidden">
+                            <div class="upi-apps-row">
+                                <button class="upi-app-btn" onclick="selectUPIApp('gpay')">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f5f5f5'/%3E%3Cpath d='M10 20a10 10 0 1 1 20 0 10 10 0 0 1-20 0z' fill='%234285F4' opacity='.15'/%3E%3Cpath d='M25.7 15.3c-.3-.3-.8-.3-1.1 0L19.4 20l-2.6-2.6c-.3-.3-.8-.3-1.1 0s-.3.8 0 1.1l3.2 3.2c.3.3.8.3 1.1 0l5.7-5.7c.3-.3.3-.8 0-1.1z' fill='%234285F4'/%3E%3C/svg%3E" alt="Google Pay"/>
+                                    <span>GPay</span>
+                                </button>
+                                <button class="upi-app-btn" onclick="selectUPIApp('phonepe')">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f5f5f5'/%3E%3Cpath d='M10 20a10 10 0 1 1 20 0 10 10 0 0 1-20 0z' fill='%235B21B6' opacity='.15'/%3E%3Cpath d='M25.7 15.3c-.3-.3-.8-.3-1.1 0L19.4 20l-2.6-2.6c-.3-.3-.8-.3-1.1 0s-.3.8 0 1.1l3.2 3.2c.3.3.8.3 1.1 0l5.7-5.7c.3-.3.3-.8 0-1.1z' fill='%235B21B6'/%3E%3C/svg%3E" alt="PhonePe"/>
+                                    <span>PhonePe</span>
+                                </button>
+                                <button class="upi-app-btn" onclick="selectUPIApp('paytm')">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f5f5f5'/%3E%3Cpath d='M10 20a10 10 0 1 1 20 0 10 10 0 0 1-20 0z' fill='%2300BAF2' opacity='.15'/%3E%3Cpath d='M25.7 15.3c-.3-.3-.8-.3-1.1 0L19.4 20l-2.6-2.6c-.3-.3-.8-.3-1.1 0s-.3.8 0 1.1l3.2 3.2c.3.3.8.3 1.1 0l5.7-5.7c.3-.3.3-.8 0-1.1z' fill='%2300BAF2'/%3E%3C/svg%3E" alt="Paytm"/>
+                                    <span>Paytm</span>
+                                </button>
+                            </div>
+                            <div class="upi-divider"><span>or enter UPI ID</span></div>
+                            <div class="upi-id-form">
+                                <div class="upi-input-row">
+                                    <input type="text" id="pay-upi-id" class="pay-input" placeholder="username@bank" autocomplete="off"/>
+                                    <button class="btn-upi-verify" id="btn-upi-verify" onclick="verifyCustomUPI()">Verify</button>
+                                </div>
+                                <p class="upi-status-msg" id="upi-verify-msg"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cards Option Accordion -->
+                    <div class="pay-method-item" id="method-card">
+                        <div class="pay-method-header" onclick="togglePaymentAccordion('card')">
+                            <div class="pm-title-wrap">
+                                <span class="pm-icon">💳</span>
+                                <div>
+                                    <h5>Credit / Debit Cards</h5>
+                                    <p>Visa, MasterCard, RuPay, Maestro</p>
+                                </div>
+                            </div>
+                            <i data-lucide="chevron-down" class="pm-chevron"></i>
+                        </div>
+                        <div class="pay-method-body hidden">
+                            <div class="card-form">
+                                <div class="card-field">
+                                    <label>Card Number</label>
+                                    <div class="card-input-wrap">
+                                        <input type="text" id="pay-card-number" class="pay-input" placeholder="4532 0123 4567 8901" maxlength="19" inputmode="numeric"/>
+                                        <span class="card-brand-icon" id="card-brand-icon">💳</span>
+                                    </div>
+                                </div>
+                                <div class="card-row">
+                                    <div class="card-field">
+                                        <label>Expiry Date</label>
+                                        <input type="text" id="pay-card-expiry" class="pay-input" placeholder="MM/YY" maxlength="5" inputmode="numeric"/>
+                                    </div>
+                                    <div class="card-field">
+                                        <label>CVV</label>
+                                        <input type="password" id="pay-card-cvv" class="pay-input" placeholder="123" maxlength="3" inputmode="numeric"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COD Option Accordion -->
+                    <div class="pay-method-item" id="method-cod">
+                        <div class="pay-method-header" onclick="togglePaymentAccordion('cod')">
+                            <div class="pm-title-wrap">
+                                <span class="pm-icon">💵</span>
+                                <div>
+                                    <h5>Pay after Service / COD</h5>
+                                    <p>Cash, UPI QR scan, or card tap at delivery</p>
+                                </div>
+                            </div>
+                            <i data-lucide="chevron-down" class="pm-chevron"></i>
+                        </div>
+                        <div class="pay-method-body hidden">
+                            <p class="cod-hint-text">No payment is needed right now. You can pay our delivery partner via cash or UPI QR scan once your clothes are cleaned and returned.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pay Button -->
+            <button class="btn-primary full btn-pay-now" id="btn-pay-submit" onclick="processPayment()">
+                <i data-lucide="lock" style="width: 16px; height: 16px; margin-right: 4px;"></i> Securely Confirm &amp; Pay
+            </button>
+            <div class="scr-pad"></div>
+        </section>
+
     </main>
 
     <!-- Bottom Navigation -->
@@ -506,6 +667,51 @@
             <span>Profile</span>
         </button>
     </nav>
+
+    <!-- SECURE LOADER OVERLAY -->
+    <div id="payment-loader-overlay" class="overlay hidden">
+        <div class="loader-content">
+            <div class="secure-spinner-wrap">
+                <svg class="secure-spinner" viewBox="0 0 50 50">
+                    <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="4"></circle>
+                </svg>
+                <i data-lucide="shield" class="spinner-shield"></i>
+            </div>
+            <h4 id="payment-loader-title">Securing Connection...</h4>
+            <p id="payment-loader-sub">Do not close the app or press back</p>
+        </div>
+    </div>
+
+    <!-- PAYMENT SUCCESS OVERLAY -->
+    <div id="payment-success-overlay" class="overlay success-overlay hidden">
+        <div class="success-card">
+            <div class="success-checkmark-wrap">
+                <svg class="checkmark-svg" viewBox="0 0 52 52">
+                    <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                    <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+            </div>
+            <h3>Booking Confirmed!</h3>
+            <p class="success-message">Your pickup is scheduled successfully.</p>
+            
+            <div class="success-receipt-card">
+                <div class="sr-row">
+                    <span class="sr-label">Order ID</span>
+                    <span class="sr-val" id="success-order-id">-</span>
+                </div>
+                <div class="sr-row">
+                    <span class="sr-label">Service</span>
+                    <span class="sr-val" id="success-service-name">-</span>
+                </div>
+                <div class="sr-row">
+                    <span class="sr-label">Total Paid</span>
+                    <span class="sr-val" id="success-total-paid">-</span>
+                </div>
+            </div>
+
+            <button class="btn-primary full btn-success-action" onclick="goToTracking()">Track Your Order</button>
+        </div>
+    </div>
 </div>
 
 <!-- BOOKING BOTTOM SHEET -->
