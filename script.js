@@ -1190,6 +1190,27 @@ window.processPayment = function() {
     return;
   }
   
+  if (method === 'cod') {
+    const loader = document.getElementById('payment-loader-overlay');
+    const title = document.getElementById('payment-loader-title');
+    const sub = document.getElementById('payment-loader-sub');
+    
+    loader.classList.remove('hidden');
+    title.textContent = 'Verifying Order Details...';
+    sub.textContent = 'Generating pickup reference code';
+    
+    setTimeout(() => {
+      title.textContent = 'Confirming Booking...';
+      sub.textContent = 'Securing pickup slot with our vendor';
+      
+      setTimeout(() => {
+        loader.classList.add('hidden');
+        completeCheckout('CASH-ON-DELIVERY');
+      }, 1000);
+    }, 1000);
+    return;
+  }
+  
   if (method === 'upi') {
     const upiId = document.getElementById('pay-upi-id').value.trim();
     if (!window.selectedUPIApp && !upiId) {
@@ -1226,35 +1247,80 @@ window.processPayment = function() {
     }
   }
   
-  // Show gateway loading states
-  const loader = document.getElementById('payment-loader-overlay');
-  const title = document.getElementById('payment-loader-title');
-  const sub = document.getElementById('payment-loader-sub');
-  
-  loader.classList.remove('hidden');
-  
-  title.textContent = 'Securing Connection...';
-  sub.textContent = 'Establishing secure SSL gateway tunnel';
-  
-  setTimeout(() => {
-    title.textContent = 'Authorizing with Bank...';
-    sub.textContent = 'Contacting payment server & validating assets';
-    
-    setTimeout(() => {
-      title.textContent = 'Finalizing Order...';
-      sub.textContent = 'Writing transaction ledger and booking pickup';
-      
-      setTimeout(() => {
-        loader.classList.add('hidden');
-        completeCheckout();
-      }, 1000);
-    }, 1200);
-  }, 1000);
-};
-
-function completeCheckout() {
+  // Initialize Razorpay Options
   const o = window.pendingOrder;
   if (!o) return;
+  
+  let prefillName = 'User';
+  let prefillEmail = '';
+  let prefillContact = '';
+  
+  if (auth && auth.currentUser) {
+    prefillName = auth.currentUser.displayName || 'User';
+    prefillEmail = auth.currentUser.email || '';
+    prefillContact = auth.currentUser.phoneNumber || '';
+  }
+  
+  const options = {
+    "key": "rzp_test_pL11L7S3aX49aM", // Standard Razorpay test public key
+    "amount": Math.round(o.total * 100), // Amount in paise
+    "currency": "INR",
+    "name": "HouseLoop",
+    "description": `Payment for ${o.serviceName} (${o.orderId})`,
+    "image": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231B5E3B'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='38' font-weight='900' fill='white' font-family='Arial'%3E%E2%88%9E%3C/text%3E%3C/svg%3E",
+    "handler": function (response) {
+      const loader = document.getElementById('payment-loader-overlay');
+      const title = document.getElementById('payment-loader-title');
+      const sub = document.getElementById('payment-loader-sub');
+      
+      loader.classList.remove('hidden');
+      title.textContent = 'Verifying Transaction...';
+      sub.textContent = 'Connecting with Razorpay security nodes';
+      
+      setTimeout(() => {
+        title.textContent = 'Finalizing Booking...';
+        sub.textContent = 'Writing order reference ledger';
+        
+        setTimeout(() => {
+          loader.classList.add('hidden');
+          completeCheckout(response.razorpay_payment_id);
+        }, 1000);
+      }, 1000);
+    },
+    "prefill": {
+      "name": prefillName,
+      "email": prefillEmail,
+      "contact": prefillContact
+    },
+    "notes": {
+      "address": o.address,
+      "time_slot": o.slot,
+      "service_type": o.service
+    },
+    "theme": {
+      "color": "#1B5E3B"
+    },
+    "modal": {
+      "ondismiss": function() {
+        alert('Payment cancelled. Please try again to complete the booking.');
+      }
+    }
+  };
+  
+  try {
+    const rzp = new Razorpay(options);
+    rzp.open();
+  } catch (error) {
+    console.error("Razorpay SDK Error:", error);
+    alert("Razorpay payment gateway failed to load. Please make sure you are online.");
+  }
+};
+
+function completeCheckout(paymentId) {
+  const o = window.pendingOrder;
+  if (!o) return;
+  
+  const paymentRef = paymentId || 'COD-' + Math.floor(100000 + Math.random() * 900000);
   
   const newOrder = {
     orderId: o.orderId,
@@ -1264,6 +1330,7 @@ function completeCheckout() {
     total: o.total,
     address: o.address,
     slot: o.slot,
+    paymentRef: paymentRef,
     date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
     status: 'Confirmed',
     steps: ['Confirmed', 'At vendor', 'Cleaning', 'Delivered'],
@@ -1283,6 +1350,19 @@ function completeCheckout() {
   document.getElementById('success-order-id').textContent = '#' + o.orderId;
   document.getElementById('success-service-name').textContent = o.serviceName;
   document.getElementById('success-total-paid').textContent = `₹${o.total.toFixed(0)}`;
+  
+  const receiptCard = document.querySelector('.success-receipt-card');
+  if (receiptCard) {
+    let refRow = document.getElementById('success-ref-row');
+    if (!refRow) {
+      refRow = document.createElement('div');
+      refRow.className = 'sr-row';
+      refRow.id = 'success-ref-row';
+      refRow.innerHTML = `<span class="sr-label">Payment ID</span><span class="sr-val" id="success-payment-id">-</span>`;
+      receiptCard.appendChild(refRow);
+    }
+    document.getElementById('success-payment-id').textContent = paymentRef;
+  }
   
   document.getElementById('payment-success-overlay').classList.remove('hidden');
   
