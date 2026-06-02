@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HouseLoop – Laundry at Your Door</title>
-    <meta name="description" content="Fresh laundry at your doorstep. Pickup in 30 min, back in 48 hrs.">
+    <title>HouseLoop – Skip the Loop</title>
+    <meta name="description" content="Skip the Loop with HouseLoop. Premium Laundry and Home Services at your doorstep.">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231B5E3B'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='38' font-weight='900' fill='white' font-family='Arial'%3E%E2%88%9E%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
@@ -59,7 +59,7 @@
         </div>
     </div>
     <p class="pl-brand"><span class="pl-infinity">∞</span> HouseLoop</p>
-    <p class="pl-tagline">Fresh clothes, at your door</p>
+    <p class="pl-tagline">Skip the Loop</p>
 </div>
 
 <!-- AUTH SCREEN -->
@@ -71,7 +71,7 @@
             <span class="auth-logo-icon">∞</span>
             <h1>HouseLoop</h1>
         </div>
-        <p class="auth-tagline">Fresh clothes, at your door 🫧</p>
+        <p class="auth-tagline">Skip the Loop 🫧</p>
 
         <button class="btn-google" id="btn-google-auth">
             <svg width="20" height="20" viewBox="0 0 24 24">
@@ -166,18 +166,87 @@
             </div>
 
             <div class="sec-hdr">
-                <h3>Select service</h3>
+                <h3>Select Category</h3>
             </div>
-            <div class="svc-grid">
-                <div class="svc-card active-svc" data-svc="wf" onclick="selectSvc(this)">
-                    <div class="svc-icon-wrap"><i data-lucide="shirt"></i></div>
-                    <div class="svc-name">Wash &amp; Fold</div>
-                    <div class="svc-price">₹69 / kg</div>
+            <div class="cat-grid">
+                <div class="cat-card" id="cat-laundry" onclick="toggleCategory('laundry')">
+                    <div class="cat-emoji">🧺</div>
+                    <div class="cat-name">Laundry</div>
+                    <p class="cat-desc">Wash, Iron &amp; Fold</p>
                 </div>
-                <div class="svc-card" data-svc="wi" onclick="selectSvc(this)">
-                    <div class="svc-icon-wrap"><i data-lucide="wind"></i></div>
-                    <div class="svc-name">Wash &amp; Iron</div>
-                    <div class="svc-price">₹89 / kg</div>
+                <div class="cat-card" id="cat-car" onclick="toggleCategory('car')">
+                    <div class="cat-emoji">🚗</div>
+                    <div class="cat-name">Car Cleaning</div>
+                    <p class="cat-desc">Monthly &amp; Daily wash</p>
+                </div>
+            </div>
+
+            <!-- SUB-SERVICES SECTIONS -->
+            <div id="sub-laundry" class="sub-svc-section hidden-svc">
+                <div class="sec-hdr-sub">
+                    <h4>Laundry Services</h4>
+                </div>
+                <div class="svc-grid-v2">
+                    <div class="svc-card-v2" data-svc="wf" onclick="selectSvcV2('wf')">
+                        <div class="svc-v2-left">
+                            <div class="svc-v2-icon"><i data-lucide="shirt"></i></div>
+                            <div class="svc-v2-details">
+                                <h5>Wash &amp; Fold</h5>
+                                <p>Clothes washed, dried &amp; folded</p>
+                            </div>
+                        </div>
+                        <div class="svc-v2-right">
+                            <div class="svc-v2-price">₹69 / kg</div>
+                            <button class="btn-book-svc">Book</button>
+                        </div>
+                    </div>
+                    <div class="svc-card-v2" data-svc="wi" onclick="selectSvcV2('wi')">
+                        <div class="svc-v2-left">
+                            <div class="svc-v2-icon"><i data-lucide="wind"></i></div>
+                            <div class="svc-v2-details">
+                                <h5>Wash &amp; Iron</h5>
+                                <p>Washed, dried and steam-ironed</p>
+                            </div>
+                        </div>
+                        <div class="svc-v2-right">
+                            <div class="svc-v2-price">₹89 / kg</div>
+                            <button class="btn-book-svc">Book</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sub-car" class="sub-svc-section hidden-svc">
+                <div class="sec-hdr-sub">
+                    <h4>Car Cleaning Services</h4>
+                </div>
+                <div class="svc-grid-v2">
+                    <div class="svc-card-v2" data-svc="cc_monthly" onclick="selectSvcV2('cc_monthly')">
+                        <div class="svc-v2-left">
+                            <div class="svc-v2-icon"><i data-lucide="calendar"></i></div>
+                            <div class="svc-v2-details">
+                                <h5>Car cleaning Subscription</h5>
+                                <p>Monthly plan · Daily exterior wash</p>
+                            </div>
+                        </div>
+                        <div class="svc-v2-right">
+                            <div class="svc-v2-price">₹999 / mo</div>
+                            <button class="btn-book-svc">Book</button>
+                        </div>
+                    </div>
+                    <div class="svc-card-v2" data-svc="cc_daily" onclick="selectSvcV2('cc_daily')">
+                        <div class="svc-v2-left">
+                            <div class="svc-v2-icon"><i data-lucide="droplet"></i></div>
+                            <div class="svc-v2-details">
+                                <h5>Daily Car cleaning</h5>
+                                <p>One-time exterior &amp; interior wash</p>
+                            </div>
+                        </div>
+                        <div class="svc-v2-right">
+                            <div class="svc-v2-price">₹149 / wash</div>
+                            <button class="btn-book-svc">Book</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -446,9 +515,12 @@
             <select id="bs-service" class="bs-select">
                 <option value="wf">Wash &amp; Fold – ₹69/kg</option>
                 <option value="wi">Wash &amp; Iron – ₹89/kg</option>
+                <option value="sp">Steam Press Only – ₹39/kg</option>
+                <option value="cc_monthly">Car Subscription (Monthly) – ₹999/mo</option>
+                <option value="cc_daily">Daily Car Cleaning – ₹149/wash</option>
             </select>
         </div>
-        <div class="bs-field">
+        <div class="bs-field" id="bs-weight-field">
             <label>Weight (kg)</label>
             <input type="number" id="bs-weight" class="bs-input" min="1" max="50" value="3" step="1"/>
         </div>

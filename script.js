@@ -147,19 +147,39 @@ window.switchOrderTab = function(btn, type) {
   document.getElementById('orders-history').classList.toggle('hidden', type !== 'history');
 };
 
-// ── Service Selection ──
-window.selectSvc = function(el) {
-  document.querySelectorAll('.svc-card').forEach(c => c.classList.remove('active-svc'));
-  el.classList.add('active-svc');
+// ── Category & Service Selection ──
+window.toggleCategory = function(cat) {
+  const catLaundry = document.getElementById('cat-laundry');
+  const catCar = document.getElementById('cat-car');
+  const subLaundry = document.getElementById('sub-laundry');
+  const subCar = document.getElementById('sub-car');
   
-  const svc = el.getAttribute('data-svc');
-  const serviceSelect = document.getElementById('bs-service');
-  if (serviceSelect && (svc === 'wf' || svc === 'wi')) {
-    serviceSelect.value = svc;
-    updateBookingPrice();
+  const isLaundryActive = catLaundry?.classList.contains('active-cat');
+  const isCarActive = catCar?.classList.contains('active-cat');
+  
+  // Collapse everything
+  catLaundry?.classList.remove('active-cat');
+  catCar?.classList.remove('active-cat');
+  subLaundry?.classList.add('hidden-svc');
+  subCar?.classList.add('hidden-svc');
+  
+  // Expand only if it wasn't already active
+  if (cat === 'laundry' && !isLaundryActive) {
+    catLaundry?.classList.add('active-cat');
+    subLaundry?.classList.remove('hidden-svc');
+  } else if (cat === 'car' && !isCarActive) {
+    catCar?.classList.add('active-cat');
+    subCar?.classList.remove('hidden-svc');
   }
   
-  // Immediately open the booking sheet and lock the service selection
+  lucide.createIcons();
+};
+
+window.selectSvcV2 = function(svcCode) {
+  const serviceSelect = document.getElementById('bs-service');
+  if (serviceSelect) {
+    serviceSelect.value = svcCode;
+  }
   openBookingSheet(true);
 };
 
@@ -172,53 +192,83 @@ function updateBookingPrice() {
   if (!serviceSelect || !weightInput || !breakdownDiv) return;
   
   const service = serviceSelect.value;
-  const weight = parseFloat(weightInput.value) || 0;
+  const isLaundry = service === 'wf' || service === 'wi' || service === 'sp';
   
-  const rate = service === 'wf' ? 69 : 89;
-  const serviceName = service === 'wf' ? 'Wash & Fold' : 'Wash & Iron';
-  
-  const subtotal = weight * rate;
-  const isFreePickup = weight > 3;
-  const pickupFee = isFreePickup ? 0 : 40;
-  const total = subtotal + pickupFee;
-  
-  let pickupFeeHTML = '';
-  if (isFreePickup) {
-    pickupFeeHTML = `<div><span class="pb-original-fee">₹40</span><span class="pb-free-tag">Free</span></div>`;
-  } else {
-    pickupFeeHTML = `<span>₹40</span>`;
+  const weightField = document.getElementById('bs-weight-field');
+  if (weightField) {
+    weightField.classList.toggle('hidden', !isLaundry);
   }
   
-  // Calculate weight needed to avoid delivery fee (weight > 3 is free)
-  const needed = 4 - weight;
-  const neededStr = Number.isInteger(needed) ? needed.toString() : needed.toFixed(1);
-  const nudgeHTML = (!isFreePickup && weight > 0)
-    ? `<span class="pb-nudge">Add ${neededStr} more KGs to avoid the Delivery charges.</span>`
-    : '';
-
-  breakdownDiv.innerHTML = `
-    <div class="pb-row pb-main-item">
-      <div class="pb-item-info">
-        <span>${serviceName} (${weight} kg × ₹${rate})</span>
-        ${nudgeHTML}
+  let html = '';
+  
+  if (isLaundry) {
+    const weight = parseFloat(weightInput.value) || 0;
+    const rate = service === 'wf' ? 69 : (service === 'wi' ? 89 : 39);
+    const serviceName = service === 'wf' ? 'Wash & Fold' : (service === 'wi' ? 'Wash & Iron' : 'Steam Press Only');
+    
+    const subtotal = weight * rate;
+    const isFreePickup = weight > 3;
+    const pickupFee = isFreePickup ? 0 : 40;
+    const total = subtotal + pickupFee;
+    
+    let pickupFeeHTML = '';
+    if (isFreePickup) {
+      pickupFeeHTML = `<div><span class="pb-original-fee">₹40</span><span class="pb-free-tag">Free</span></div>`;
+    } else {
+      pickupFeeHTML = `<span>₹40</span>`;
+    }
+    
+    const needed = 4 - weight;
+    const neededStr = Number.isInteger(needed) ? needed.toString() : needed.toFixed(1);
+    const nudgeHTML = (!isFreePickup && weight > 0)
+      ? `<span class="pb-nudge">Add ${neededStr} more KGs to avoid the Delivery charges.</span>`
+      : '';
+      
+    html = `
+      <div class="pb-row pb-main-item">
+        <div class="pb-item-info">
+          <span>${serviceName} (${weight} kg × ₹${rate})</span>
+          ${nudgeHTML}
+        </div>
+        <span class="pb-main-price">₹${subtotal.toFixed(0)}</span>
       </div>
-      <span class="pb-main-price">₹${subtotal.toFixed(0)}</span>
-    </div>
-    <div class="pb-row">
-      <span class="fee-label">
-        Pickup and Delivery fee
-        <span class="tooltip-container">
-          <i data-lucide="info" class="info-icon"></i>
-          <span class="tooltip-text">this fee goes to Delivery boy for their efforts</span>
+      <div class="pb-row">
+        <span class="fee-label">
+          Pickup and Delivery fee
+          <span class="tooltip-container">
+            <i data-lucide="info" class="info-icon"></i>
+            <span class="tooltip-text">this fee goes to Delivery boy for their efforts</span>
+          </span>
         </span>
-      </span>
-      ${pickupFeeHTML}
-    </div>
-    <div class="pb-row">
-      <span>Estimated Total</span>
-      <span>₹${total.toFixed(0)}</span>
-    </div>
-  `;
+        ${pickupFeeHTML}
+      </div>
+      <div class="pb-row">
+        <span>Estimated Total</span>
+        <span>₹${total.toFixed(0)}</span>
+      </div>
+    `;
+  } else {
+    // Car Cleaning flat rate pricing
+    const rate = service === 'cc_monthly' ? 999 : 149;
+    const serviceName = service === 'cc_monthly' ? 'Car Cleaning Subscription' : 'Daily Car Cleaning';
+    
+    html = `
+      <div class="pb-row">
+        <span>${serviceName}</span>
+        <span>₹${rate}</span>
+      </div>
+      <div class="pb-row">
+        <span>Service Charge</span>
+        <div><span class="pb-free-tag">Free</span></div>
+      </div>
+      <div class="pb-row">
+        <span>Estimated Total</span>
+        <span>₹${rate}</span>
+      </div>
+    `;
+  }
+  
+  breakdownDiv.innerHTML = html;
   lucide.createIcons();
 }
 
@@ -233,16 +283,7 @@ window.openBookingSheet = function(lockService = false) {
     addressInput.value = selectedLocationName;
   }
 
-  const activeSvcCard = document.querySelector('.svc-card.active-svc');
   const serviceSelect = document.getElementById('bs-service');
-  if (activeSvcCard && serviceSelect) {
-    const svc = activeSvcCard.getAttribute('data-svc');
-    if (svc === 'wf' || svc === 'wi') {
-      serviceSelect.value = svc;
-    }
-  }
-
-  // Lock service dropdown if opened via a specific service card
   if (serviceSelect) {
     serviceSelect.disabled = lockService;
   }
