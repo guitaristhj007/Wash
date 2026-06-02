@@ -580,4 +580,66 @@ input, select { font-family:inherit; }
   max-width: 280px;
 }
 
+/* ── TOOLTIP FOR PICKUP AND DELIVERY FEE ── */
+.fee-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.tooltip-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+.info-icon {
+  width: 14px;
+  height: 14px;
+  color: var(--sub);
+  transition: color 0.15s ease, transform 0.15s ease;
+  vertical-align: middle;
+}
+.tooltip-container:hover .info-icon {
+  color: var(--primary);
+  transform: scale(1.1);
+}
+.tooltip-text {
+  visibility: hidden;
+  width: 220px;
+  background-color: var(--text);
+  color: #ffffff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 8px 12px;
+  position: absolute;
+  z-index: 1010;
+  bottom: 140%; /* Position above the icon */
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+  font-size: 0.74rem;
+  font-weight: 500;
+  line-height: 1.35;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  pointer-events: none;
+  white-space: normal;
+}
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -6px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: var(--text) transparent transparent transparent;
+}
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+
 

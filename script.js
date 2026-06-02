@@ -195,7 +195,13 @@ function updateBookingPrice() {
       <span>₹${subtotal.toFixed(0)}</span>
     </div>
     <div class="pb-row">
-      <span>Pickup Fee</span>
+      <span class="fee-label">
+        Pickup and Delivery fee
+        <span class="tooltip-container">
+          <i data-lucide="info" class="info-icon"></i>
+          <span class="tooltip-text">this fee goes to Delivery boy for their efforts</span>
+        </span>
+      </span>
       ${pickupFeeHTML}
     </div>
     <div class="pb-row">
@@ -203,6 +209,7 @@ function updateBookingPrice() {
       <span>₹${total.toFixed(0)}</span>
     </div>
   `;
+  lucide.createIcons();
 }
 
 // ── Booking Sheet ──
