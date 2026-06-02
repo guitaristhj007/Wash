@@ -482,19 +482,30 @@
         <h3>Set your location</h3>
         <button class="lm-close" onclick="closeLocModal()"><i data-lucide="x"></i></button>
     </div>
-    <div class="lm-search-row">
-        <i data-lucide="search" class="lm-ico"></i>
-        <input type="text" id="loc-search-input" class="lm-input" placeholder="Search area, colony, city…" autocomplete="off"/>
+    <div class="lm-tabs">
+        <button class="lm-tab active" id="lm-tab-saved" onclick="switchLocTab('saved')">Saved Addresses</button>
+        <button class="lm-tab" id="lm-tab-new" onclick="switchLocTab('new')">New Location</button>
     </div>
-    <div id="loc-suggestions" class="loc-suggestions"></div>
-    <div id="loc-map" class="loc-map"></div>
-    <div class="lm-actions">
-        <button class="lm-detect-btn" onclick="fetchLocation()">
-            <i data-lucide="crosshair"></i> Use current location
-        </button>
-        <button class="btn-primary lm-confirm-btn" onclick="confirmSelectedLocation()">
-            Confirm Location
-        </button>
+    <div id="lm-content-saved" class="lm-tab-content">
+        <div class="modal-saved-addresses" id="modal-saved-list">
+            <!-- Loaded dynamically -->
+        </div>
+    </div>
+    <div id="lm-content-new" class="lm-tab-content hidden">
+        <div class="lm-search-row">
+            <i data-lucide="search" class="lm-ico"></i>
+            <input type="text" id="loc-search-input" class="lm-input" placeholder="Search area, colony, city…" autocomplete="off"/>
+        </div>
+        <div id="loc-suggestions" class="loc-suggestions"></div>
+        <div id="loc-map" class="loc-map"></div>
+        <div class="lm-actions">
+            <button class="lm-detect-btn" onclick="fetchLocation()">
+                <i data-lucide="crosshair"></i> Use current location
+            </button>
+            <button class="btn-primary lm-confirm-btn" onclick="confirmSelectedLocation()">
+                Confirm Location
+            </button>
+        </div>
     </div>
 </div>
 

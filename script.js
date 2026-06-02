@@ -564,9 +564,85 @@ function updateMarkerPos(lat, lng, reverseGeocode = true) {
 }
 
 // ── Location Modal Actions ──
+window.switchLocTab = function(tab) {
+  const tabSaved = document.getElementById('lm-tab-saved');
+  const tabNew = document.getElementById('lm-tab-new');
+  const contentSaved = document.getElementById('lm-content-saved');
+  const contentNew = document.getElementById('lm-content-new');
+  
+  if (tab === 'saved') {
+    tabSaved?.classList.add('active');
+    tabNew?.classList.remove('active');
+    contentSaved?.classList.remove('hidden');
+    contentNew?.classList.add('hidden');
+  } else {
+    tabSaved?.classList.remove('active');
+    tabNew?.classList.add('active');
+    contentSaved?.classList.add('hidden');
+    contentNew?.classList.remove('hidden');
+    
+    // Trigger map resize since it's now visible
+    if (map) {
+      setTimeout(() => {
+        google.maps.event.trigger(map, "resize");
+        map.setCenter(currentCoords);
+      }, 50);
+    }
+  }
+};
+
+function renderModalSavedAddresses() {
+  const modalList = document.getElementById('modal-saved-list');
+  if (!modalList) return;
+  
+  let saved = localStorage.getItem('hl_saved_addresses');
+  let addresses = saved ? JSON.parse(saved) : defaultSavedAddresses;
+  
+  modalList.innerHTML = '';
+  
+  if (addresses.length === 0) {
+    modalList.innerHTML = `<p style="font-size:0.84rem;color:var(--sub);text-align:center;padding:20px 0;">No saved addresses yet.</p>`;
+    return;
+  }
+  
+  addresses.forEach(addr => {
+    const item = document.createElement('div');
+    item.className = 'modal-saved-item';
+    item.innerHTML = `
+      <div class="ms-icon">${addr.icon}</div>
+      <div class="ms-info">
+        <div class="ms-label">${addr.label}</div>
+        <div class="ms-address" title="${addr.address}">${addr.address}</div>
+      </div>
+    `;
+    item.addEventListener('click', () => {
+      selectedLocationName = addr.address;
+      confirmSelectedLocation();
+      
+      const bsAddress = document.getElementById('bs-address');
+      if (bsAddress) {
+        bsAddress.value = addr.address;
+      }
+      
+      loadGoogleMapsScript(() => {
+        if (!geocoder) geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ address: addr.address }, (results, status) => {
+          if (status === google.maps.GeocoderStatus.OK && results[0]) {
+            const location = results[0].geometry.location;
+            updateMarkerPos(location.lat(), location.lng(), false);
+          }
+        });
+      });
+    });
+    modalList.appendChild(item);
+  });
+}
+
 window.openLocModal = function() {
   document.getElementById('loc-overlay').classList.remove('hidden');
   document.getElementById('loc-modal').classList.remove('hidden');
+  switchLocTab('saved');
+  renderModalSavedAddresses();
   initMap();
   lucide.createIcons();
 };
