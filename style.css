@@ -288,32 +288,59 @@ input, select { font-family:inherit; }
 .otp-box:focus { border-color:var(--primary); }
 
 /* ── PRELOADER ── */
-#preloader { position:fixed; inset:0; background:#030712; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999; }
-.pl-scene { position:relative; width:320px; height:180px; }
-.pl-bottle-wrap { position:absolute; left:0; top:50%; transform:translateY(-50%) rotate(-35deg); animation:bottleIn .7s cubic-bezier(0.34,1.56,0.64,1) .2s both; transform-origin:center; }
-@keyframes bottleIn { from{opacity:0;left:-120px;transform:translateY(-50%) rotate(-35deg)} to{opacity:1;left:0;transform:translateY(-50%) rotate(-35deg)} }
-.pl-bottle { width:70px; height:110px; filter:drop-shadow(0 0 20px rgba(6,182,212,0.4)); }
-.pl-drop { position:absolute; width:10px; height:14px; background:radial-gradient(circle at 30% 30%,#67E8F9,#06B6D4); border-radius:50% 50% 50% 50% / 60% 60% 40% 40%; top:50%; left:55px; opacity:0; }
-.d1 { animation:dropArc 0.7s cubic-bezier(0.25,0.46,0.45,0.94) 1.3s both; }
-.d2 { animation:dropArc 0.7s cubic-bezier(0.25,0.46,0.45,0.94) 1.55s both; }
-.d3 { animation:dropArc 0.7s cubic-bezier(0.25,0.46,0.45,0.94) 1.8s both; }
-@keyframes dropArc {
-  0% { opacity:1; left:55px; top:50%; transform:translateY(0); }
-  60% { opacity:1; left:160px; top:35%; }
-  100% { opacity:0; left:240px; top:50%; transform:scale(0); }
+#preloader { position:fixed; inset:0; background:#030712; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999; overflow:hidden; }
+.pl-scene { position:relative; width:200px; height:230px; display:flex; align-items:center; justify-content:center; }
+
+/* Glow rings */
+.pl-glow-ring { position:absolute; border-radius:50%; animation:glowPulse 1.8s ease-in-out infinite; }
+.rg1 { width:220px; height:220px; border:2px solid rgba(27,94,59,0.35); animation-delay:0s; }
+.rg2 { width:170px; height:170px; border:2px solid rgba(6,182,212,0.2); animation-delay:0.4s; }
+@keyframes glowPulse {
+  0%,100% { transform:scale(0.95); opacity:0.4; }
+  50% { transform:scale(1.08); opacity:1; }
 }
-.pl-splash { position:absolute; top:50%; left:240px; transform:translate(-50%,-50%); }
-.splash-r { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) scale(0); border-radius:50%; border:2px solid #06B6D4; opacity:0; }
-.r1 { width:40px; height:40px; animation:splashRing .5s ease 2.2s both; }
-.r2 { width:70px; height:70px; animation:splashRing .5s ease .1s 2.2s both; animation-delay:2.3s; }
-@keyframes splashRing { 0%{transform:translate(-50%,-50%) scale(0);opacity:0.8} 100%{transform:translate(-50%,-50%) scale(1);opacity:0} }
-.pl-machine { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) scale(0); opacity:0; animation:machineReveal .6s cubic-bezier(0.34,1.56,0.64,1) 2.5s forwards; }
-@keyframes machineReveal { to{opacity:1;transform:translate(-50%,-50%) scale(1)} }
-.wm-svg { width:120px; height:120px; filter:drop-shadow(0 0 30px rgba(27,94,59,0.5)); }
-.drum-spin { transform-origin:70px 78px; animation:drumRoll 1.2s linear 3.2s infinite; }
-@keyframes drumRoll { to{transform:rotate(360deg)} }
-.pl-brand { color:#fff; font-size:1.4rem; font-weight:800; margin-top:20px; letter-spacing:-0.5px; }
-.pl-tagline { color:rgba(255,255,255,0.4); font-size:0.8rem; margin-top:4px; }
+
+/* Machine enters from below */
+.pl-machine { position:relative; animation:machineReveal 0.55s cubic-bezier(0.34,1.56,0.64,1) 0.1s both; }
+@keyframes machineReveal { from{opacity:0;transform:translateY(30px) scale(0.8)} to{opacity:1;transform:translateY(0) scale(1)} }
+.wm-svg { width:160px; height:180px; filter:drop-shadow(0 8px 40px rgba(6,182,212,0.35)) drop-shadow(0 0 20px rgba(27,94,59,0.6)); }
+
+/* Drum spin – starts right away, fast tumble */
+.drum-spin2 { transform-origin:80px 106px; animation:drumRoll2 0.9s linear 0.5s infinite; }
+@keyframes drumRoll2 { to{transform:rotate(360deg)} }
+
+/* Water wave */
+.water-wave { animation:waveMotion 1.4s ease-in-out 0.5s infinite alternate; transform-origin:80px 130px; }
+@keyframes waveMotion {
+  from { transform:translateX(-8px) scaleY(1); }
+  to   { transform:translateX(8px) scaleY(1.15); }
+}
+
+/* Foam bubbles inside drum */
+.bubble { animation:bubbleFloat 1.6s ease-in-out infinite; }
+.b1 { animation-delay:0s; }
+.b2 { animation-delay:0.3s; }
+.b3 { animation-delay:0.6s; }
+.b4 { animation-delay:0.9s; }
+@keyframes bubbleFloat {
+  0%,100% { transform:translateY(0) scale(1); opacity:0.7; }
+  50% { transform:translateY(-6px) scale(1.15); opacity:1; }
+}
+
+/* External floating bubbles */
+.ext-bubble { position:absolute; border-radius:50%; background:radial-gradient(circle at 35% 35%, rgba(255,255,255,0.5), rgba(6,182,212,0.2)); border:1px solid rgba(6,182,212,0.4); opacity:0; animation:extBubble 2.4s ease-in-out infinite; }
+.eb1 { width:14px; height:14px; left:-30px; bottom:30px; animation-delay:0.2s; }
+.eb2 { width:9px; height:9px; right:-25px; bottom:60px; animation-delay:0.7s; }
+.eb3 { width:11px; height:11px; right:-10px; top:40px; animation-delay:1.2s; }
+@keyframes extBubble {
+  0% { opacity:0; transform:translateY(0) scale(0.7); }
+  30% { opacity:0.9; }
+  100% { opacity:0; transform:translateY(-50px) scale(1.2); }
+}
+
+.pl-brand { color:#fff; font-size:1.4rem; font-weight:800; margin-top:22px; letter-spacing:-0.5px; animation:fadeUp 0.5s ease 0.4s both; }
+.pl-tagline { color:rgba(255,255,255,0.4); font-size:0.8rem; margin-top:4px; animation:fadeUp 0.5s ease 0.55s both; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 
 /* ── DESKTOP ── */
 @media(min-width:768px) {

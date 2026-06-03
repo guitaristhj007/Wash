@@ -16,47 +16,79 @@
 <!-- PRELOADER -->
 <div id="preloader">
     <div class="pl-scene">
-        <div class="pl-bottle-wrap">
-            <svg class="pl-bottle" viewBox="0 0 80 130" xmlns="http://www.w3.org/2000/svg">
-                <rect x="30" y="2" width="20" height="14" rx="5" fill="#06B6D4"/>
-                <rect x="18" y="13" width="44" height="10" rx="4" fill="#0891B2"/>
-                <rect x="8" y="22" width="64" height="90" rx="14" fill="#1B5E3B"/>
-                <rect x="16" y="42" width="48" height="50" rx="8" fill="rgba(255,255,255,0.12)"/>
-                <rect x="22" y="52" width="36" height="4" rx="2" fill="rgba(255,255,255,0.45)"/>
-                <rect x="26" y="62" width="28" height="3" rx="1.5" fill="rgba(255,255,255,0.3)"/>
-                <rect x="24" y="70" width="32" height="3" rx="1.5" fill="rgba(255,255,255,0.3)"/>
-                <rect x="14" y="28" width="8" height="35" rx="4" fill="rgba(255,255,255,0.1)"/>
-                <circle cx="40" cy="13" r="3" fill="#67E8F9"/>
-            </svg>
-        </div>
-        <div class="pl-drop d1"></div>
-        <div class="pl-drop d2"></div>
-        <div class="pl-drop d3"></div>
-        <div class="pl-splash">
-            <div class="splash-r r1"></div>
-            <div class="splash-r r2"></div>
-        </div>
+        <!-- Glow rings -->
+        <div class="pl-glow-ring rg1"></div>
+        <div class="pl-glow-ring rg2"></div>
+        <!-- Washing Machine -->
         <div class="pl-machine">
-            <svg class="wm-svg" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
-                <rect x="4" y="4" width="132" height="132" rx="18" fill="#1B5E3B"/>
-                <rect x="10" y="10" width="120" height="26" rx="8" fill="rgba(0,0,0,0.25)"/>
-                <circle cx="30" cy="23" r="6" fill="#06B6D4" opacity="0.9"/>
-                <circle cx="48" cy="23" r="4" fill="rgba(255,255,255,0.25)"/>
-                <rect x="62" y="17" width="56" height="12" rx="4" fill="rgba(255,255,255,0.08)"/>
-                <circle cx="70" cy="78" r="50" fill="#0f3d27"/>
-                <circle cx="70" cy="78" r="42" fill="#071c12"/>
-                <clipPath id="wclip"><circle cx="70" cy="78" r="40"/></clipPath>
-                <rect x="30" y="88" width="80" height="32" fill="#06B6D4" opacity="0.45" clip-path="url(#wclip)"/>
-                <g class="drum-spin">
-                    <ellipse cx="54" cy="65" rx="11" ry="7" fill="#F472B6" opacity="0.9" transform="rotate(20 54 65)"/>
-                    <ellipse cx="87" cy="70" rx="9" ry="6" fill="#818CF8" opacity="0.9" transform="rotate(-15 87 70)"/>
-                    <ellipse cx="70" cy="92" rx="10" ry="6" fill="#FB923C" opacity="0.9" transform="rotate(10 70 92)"/>
-                    <ellipse cx="56" cy="88" rx="8" ry="5" fill="#4ADE80" opacity="0.9" transform="rotate(-20 56 88)"/>
+            <svg class="wm-svg" viewBox="0 0 160 180" xmlns="http://www.w3.org/2000/svg">
+                <!-- Body -->
+                <rect x="4" y="4" width="152" height="172" rx="22" fill="url(#bodyGrad)"/>
+                <defs>
+                    <radialGradient id="bodyGrad" cx="40%" cy="30%">
+                        <stop offset="0%" stop-color="#2E8B5A"/>
+                        <stop offset="100%" stop-color="#0F3D26"/>
+                    </radialGradient>
+                    <clipPath id="wclip2"><circle cx="80" cy="106" r="56"/></clipPath>
+                    <clipPath id="drumClip"><circle cx="80" cy="106" r="52"/></clipPath>
+                </defs>
+                <!-- Top panel -->
+                <rect x="10" y="10" width="140" height="34" rx="10" fill="rgba(0,0,0,0.3)"/>
+                <!-- Power LED -->
+                <circle cx="32" cy="27" r="8" fill="#06B6D4" opacity="0.95"/>
+                <circle cx="32" cy="27" r="4" fill="#fff" opacity="0.6"/>
+                <!-- Program dots -->
+                <circle cx="56" cy="27" r="4" fill="rgba(255,255,255,0.2)"/>
+                <circle cx="68" cy="27" r="4" fill="rgba(255,255,255,0.15)"/>
+                <circle cx="80" cy="27" r="4" fill="rgba(255,255,255,0.1)"/>
+                <!-- Temperature bar -->
+                <rect x="96" y="21" width="52" height="12" rx="6" fill="rgba(255,255,255,0.08)"/>
+                <rect x="98" y="23" width="24" height="8" rx="4" fill="rgba(6,182,212,0.5)"/>
+                <!-- Drum outer ring -->
+                <circle cx="80" cy="106" r="60" fill="#081F12"/>
+                <circle cx="80" cy="106" r="56" fill="#0A2818"/>
+                <!-- Water fill -->
+                <g clip-path="url(#wclip2)">
+                    <!-- Water wave animated -->
+                    <rect x="20" y="130" width="120" height="42" fill="#06B6D4" opacity="0.3"/>
+                    <path class="water-wave" d="M20,132 Q50,124 80,132 Q110,140 140,132 L140,172 L20,172 Z" fill="#06B6D4" opacity="0.25"/>
                 </g>
-                <circle cx="70" cy="78" r="30" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
-                <circle cx="55" cy="62" r="10" fill="rgba(255,255,255,0.05)"/>
+                <!-- Drum with spinning clothes -->
+                <g class="drum-spin2" clip-path="url(#drumClip)">
+                    <!-- Shirt -->
+                    <ellipse cx="62" cy="90" rx="14" ry="9" fill="#F472B6" opacity="0.95" transform="rotate(15 62 90)"/>
+                    <rect x="56" y="87" width="12" height="8" rx="3" fill="#F9A8D4" opacity="0.6"/>
+                    <!-- Jeans -->
+                    <ellipse cx="100" cy="95" rx="13" ry="8" fill="#818CF8" opacity="0.95" transform="rotate(-10 100 95)"/>
+                    <!-- Towel -->
+                    <rect x="68" y="118" width="24" height="10" rx="4" fill="#FB923C" opacity="0.9" transform="rotate(8 80 123)"/>
+                    <!-- T-shirt -->
+                    <ellipse cx="72" cy="115" rx="12" ry="7" fill="#4ADE80" opacity="0.95" transform="rotate(-20 72 115)"/>
+                    <!-- Sock -->
+                    <ellipse cx="96" cy="118" rx="8" ry="5" fill="#FCD34D" opacity="0.9" transform="rotate(25 96 118)"/>
+                </g>
+                <!-- Drum porthole ring -->
+                <circle cx="80" cy="106" r="56" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3"/>
+                <circle cx="80" cy="106" r="50" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5"/>
+                <!-- Drum holes -->
+                <circle cx="80" cy="52" r="4" fill="rgba(255,255,255,0.06)"/>
+                <circle cx="107" cy="68" r="3.5" fill="rgba(255,255,255,0.05)"/>
+                <circle cx="53" cy="68" r="3.5" fill="rgba(255,255,255,0.05)"/>
+                <!-- Glass shine -->
+                <ellipse cx="62" cy="78" rx="14" ry="9" fill="rgba(255,255,255,0.04)"/>
+                <!-- Door handle -->
+                <rect x="68" y="156" width="24" height="8" rx="4" fill="rgba(255,255,255,0.15)"/>
+                <!-- Foam bubbles -->
+                <circle class="bubble b1" cx="58" cy="108" r="5" fill="rgba(255,255,255,0.18)"/>
+                <circle class="bubble b2" cx="72" cy="100" r="3.5" fill="rgba(255,255,255,0.14)"/>
+                <circle class="bubble b3" cx="90" cy="112" r="4" fill="rgba(255,255,255,0.16)"/>
+                <circle class="bubble b4" cx="100" cy="100" r="3" fill="rgba(255,255,255,0.12)"/>
             </svg>
         </div>
+        <!-- Floating external bubbles -->
+        <div class="ext-bubble eb1"></div>
+        <div class="ext-bubble eb2"></div>
+        <div class="ext-bubble eb3"></div>
     </div>
     <p class="pl-brand"><span class="pl-infinity">∞</span> HouseLoop</p>
     <p class="pl-tagline">Skip the Loop</p>

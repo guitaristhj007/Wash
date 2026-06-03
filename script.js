@@ -26,7 +26,7 @@ setTimeout(() => {
     preloader.classList.add('hidden');
     checkAuth();
   }, 800);
-}, 5000);
+}, 2500);
 
 function checkAuth() {
   onAuthStateChanged(auth, (user) => {
