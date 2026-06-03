@@ -296,9 +296,7 @@ window.openBookingSheet = function(lockService = false) {
   if (addressInput && selectedLocationName && selectedLocationName !== "Detecting…" && selectedLocationName !== "Delhi, India") {
     addressInput.value = selectedLocationName;
     if (displayVal) {
-      const parts = selectedLocationName.split(',');
-      const shortText = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : selectedLocationName;
-      displayVal.textContent = shortText;
+      displayVal.textContent = getShortAddress(selectedLocationName);
     }
   } else if (addressInput) {
     let saved = localStorage.getItem('hl_saved_addresses');
@@ -306,9 +304,7 @@ window.openBookingSheet = function(lockService = false) {
     if (addresses.length > 0) {
       addressInput.value = addresses[0].address;
       if (displayVal) {
-        const parts = addresses[0].address.split(',');
-        const shortText = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : addresses[0].address;
-        displayVal.textContent = shortText;
+        displayVal.textContent = getShortAddress(addresses[0].address);
       }
     }
   }
@@ -450,9 +446,7 @@ function initBookingAddressAutocomplete() {
               
               const locText = document.getElementById('loc-text');
               if (locText) {
-                const parts = selectedLocationName.split(',');
-                const shortName = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : selectedLocationName;
-                locText.textContent = shortName;
+                locText.textContent = getShortAddress(selectedLocationName);
               }
               
               geocodePlaceId(prediction.place_id, prediction.description);
@@ -540,6 +534,26 @@ window.selectAddressItem = function(index) {
   renderSavedAddressesList();
 };
 
+function getShortAddress(address) {
+  const parts = address.split(',').map(p => p.trim());
+  if (parts.length <= 2) return address;
+  
+  let startIndex = 0;
+  while (startIndex < parts.length - 2) {
+    const part = parts[startIndex];
+    const isShort = part.length <= 4;
+    const isNumeric = /^\d+$/.test(part);
+    if (isShort || isNumeric) {
+      startIndex++;
+    } else {
+      break;
+    }
+  }
+  
+  const subParts = parts.slice(startIndex, startIndex + 2);
+  return subParts.join(', ');
+}
+
 window.confirmAddressSelection = function() {
   if (window.selectedAddressIndex === null) return;
   
@@ -555,9 +569,13 @@ window.confirmAddressSelection = function() {
     
     const displayVal = document.getElementById('adc-selected-val');
     if (displayVal) {
-      const parts = selectedAddr.address.split(',');
-      const shortText = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : selectedAddr.address;
-      displayVal.textContent = shortText;
+      displayVal.textContent = getShortAddress(selectedAddr.address);
+    }
+    
+    // Also update header location text!
+    const locText = document.getElementById('loc-text');
+    if (locText) {
+      locText.textContent = getShortAddress(selectedAddr.address);
     }
   }
   
@@ -1535,9 +1553,7 @@ function initializeHeaderLocation() {
   
   if (addresses && addresses.length > 0) {
     const defaultAddr = addresses[0].address;
-    const parts = defaultAddr.split(',');
-    const shortName = parts.length > 2 ? `${parts[0].trim()}, ${parts[1].trim()}` : defaultAddr;
-    locText.textContent = shortName;
+    locText.textContent = getShortAddress(defaultAddr);
     selectedLocationName = defaultAddr;
   } else {
     locText.textContent = "Delhi, India";
