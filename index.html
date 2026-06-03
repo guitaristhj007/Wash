@@ -130,7 +130,6 @@
         </div>
         <!-- Desktop nav links (hidden on mobile) -->
         <nav class="hdr-desktop-nav">
-            <button onclick="switchTab('vendors')">Vendors</button>
             <button onclick="switchTab('plans')">Plans</button>
             <button onclick="switchTab('orders')">My Orders</button>
             <button onclick="switchTab('profile')">Account</button>
@@ -300,47 +299,6 @@
             <div class="scr-pad"></div>
         </section>
 
-        <!-- VENDORS -->
-        <section id="screen-vendors" class="screen">
-            <div class="search-wrap">
-                <i data-lucide="search" class="search-ico"></i>
-                <input type="text" class="search-input" placeholder="Search vendors near you…"/>
-            </div>
-            <div class="sec-hdr">
-                <h3>Nearby vendors</h3>
-                <span class="count-tag">3 available</span>
-            </div>
-            <div class="vendor-list">
-                <div class="vendor-card">
-                    <div class="vendor-emo" style="background:#D1FAE5">🏪</div>
-                    <div class="vendor-info">
-                        <h4>CleanCraft Laundry</h4>
-                        <div class="vendor-meta">⭐ 4.8 · 1.2 km · <span class="open">Open</span></div>
-                        <p class="vendor-svcs">Wash &amp; Fold · Wash &amp; Iron</p>
-                    </div>
-                    <button class="btn-vselect">Select</button>
-                </div>
-                <div class="vendor-card">
-                    <div class="vendor-emo" style="background:#E0F2FE">🫧</div>
-                    <div class="vendor-info">
-                        <h4>PureWash Pro</h4>
-                        <div class="vendor-meta">⭐ 4.6 · 2.1 km · <span class="open">Open</span></div>
-                        <p class="vendor-svcs">Wash &amp; Fold · Wash &amp; Iron</p>
-                    </div>
-                    <button class="btn-vselect">Select</button>
-                </div>
-                <div class="vendor-card">
-                    <div class="vendor-emo" style="background:#FEF3C7">✨</div>
-                    <div class="vendor-info">
-                        <h4>ShineFresh</h4>
-                        <div class="vendor-meta">⭐ 4.5 · 3.4 km · <span class="closed-tag">Closed</span></div>
-                        <p class="vendor-svcs">Wash &amp; Fold · Wash &amp; Iron</p>
-                    </div>
-                    <button class="btn-vselect" disabled>Closed</button>
-                </div>
-            </div>
-            <div class="scr-pad"></div>
-        </section>
 
         <!-- PLANS -->
         <section id="screen-plans" class="screen">
@@ -650,10 +608,7 @@
             <i data-lucide="home"></i>
             <span>Home</span>
         </button>
-        <button class="nav-item" onclick="switchTab('vendors')" id="nav-vendors">
-            <i data-lucide="store"></i>
-            <span>Vendors</span>
-        </button>
+
         <button class="nav-item" onclick="switchTab('plans')" id="nav-plans">
             <i data-lucide="layers"></i>
             <span>Plans</span>
