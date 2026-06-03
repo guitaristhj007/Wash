@@ -780,6 +780,12 @@ window.triggerCurrentLocation = function() {
     return;
   }
   
+  const options = {
+    enableHighAccuracy: true,
+    timeout: 8000,
+    maximumAge: 0
+  };
+  
   navigator.geolocation.getCurrentPosition((pos) => {
     const lat = pos.coords.latitude;
     const lng = pos.coords.longitude;
@@ -794,10 +800,22 @@ window.triggerCurrentLocation = function() {
         }
       });
     });
-  }, () => {
-    alert('Permission to retrieve location was denied.');
+  }, (error) => {
+    let msg = 'Failed to retrieve location.';
+    switch (error.code) {
+      case error.PERMISSION_DENIED:
+        msg = 'Location access denied. Please allow location permissions for this site in your browser settings.';
+        break;
+      case error.POSITION_UNAVAILABLE:
+        msg = 'Location information is unavailable. Please try again or search manually.';
+        break;
+      case error.TIMEOUT:
+        msg = 'Location request timed out. Please try again or search manually.';
+        break;
+    }
+    alert(msg);
     if (asmSearchInput) asmSearchInput.value = '';
-  });
+  }, options);
 };
 
 window.selectRecentAddress = function(index) {
