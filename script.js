@@ -60,6 +60,52 @@ function updateProfile(user) {
   }
 }
 
+// ── CART STATE & UI ──
+const cart = { items: [], total: 0 };
+
+function addToCart(name, price) {
+  const existing = cart.items.find(i => i.name === name);
+  if (existing) { existing.qty += 1; }
+  else { cart.items.push({ name, price, qty: 1 }); }
+  cart.total += price;
+  updateCartUI();
+}
+function removeFromCart(name, price) {
+  const idx = cart.items.findIndex(i => i.name === name);
+  if (idx === -1) return;
+  cart.items[idx].qty -= 1;
+  if (cart.items[idx].qty <= 0) cart.items.splice(idx, 1);
+  cart.total = Math.max(0, cart.total - price);
+  updateCartUI();
+}
+function clearCart() { cart.items = []; cart.total = 0; updateCartUI(); }
+
+function updateCartUI() {
+  const qty     = cart.items.reduce((s, i) => s + i.qty, 0);
+  const badge   = document.getElementById('cart-badge');
+  const bar     = document.getElementById('cart-bar');
+  const barQty  = document.getElementById('cart-bar-count');
+  const barAmt  = document.getElementById('cart-bar-total');
+  if (badge) { badge.textContent = qty > 9 ? '9+' : qty; badge.classList.toggle('hidden', qty === 0); }
+  if (bar) {
+    if (qty > 0) {
+      bar.classList.remove('hidden');
+      bar.style.animation = 'none'; bar.offsetHeight; bar.style.animation = '';
+    } else { bar.classList.add('hidden'); }
+  }
+  if (barQty) barQty.textContent = qty === 1 ? '1 item' : `${qty} items`;
+  if (barAmt) barAmt.textContent = `₹${cart.total.toLocaleString('en-IN')}`;
+}
+function toggleCartBar() {
+  const bar = document.getElementById('cart-bar');
+  if (cart.items.length === 0) { openBookingSheet(); return; }
+  if (bar) bar.classList.toggle('hidden');
+}
+window.addToCart = addToCart;
+window.removeFromCart = removeFromCart;
+window.clearCart = clearCart;
+window.toggleCartBar = toggleCartBar;
+
 // ── Google Auth ──
 document.getElementById('btn-google-auth').addEventListener('click', async () => {
   try {

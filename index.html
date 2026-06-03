@@ -178,6 +178,10 @@
                 <i data-lucide="bell"></i>
                 <span class="notif-dot"></span>
             </button>
+            <button class="hdr-icon-btn cart-btn" id="hdr-cart-btn" aria-label="Cart" onclick="toggleCartBar()">
+                <i data-lucide="shopping-cart"></i>
+                <span class="cart-badge hidden" id="cart-badge">0</span>
+            </button>
         </div>
     </header>
 
@@ -660,6 +664,20 @@
             <span>Profile</span>
         </button>
     </nav>
+
+    <!-- Floating Cart Bar (Swiggy-style) -->
+    <div id="cart-bar" class="cart-bar hidden">
+        <div class="cart-bar-left">
+            <div class="cart-bar-icon">🛒</div>
+            <div class="cart-bar-info">
+                <span class="cart-bar-count" id="cart-bar-count">1 item</span>
+                <span class="cart-bar-total" id="cart-bar-total">₹0</span>
+            </div>
+        </div>
+        <button class="cart-bar-cta" onclick="openBookingSheet()">
+            View Cart <i data-lucide="chevron-right" style="width:15px;height:15px;"></i>
+        </button>
+    </div>
 
     <!-- SECURE LOADER OVERLAY -->
     <div id="payment-loader-overlay" class="overlay hidden">
