@@ -55,17 +55,29 @@
                 </g>
                 <!-- Drum with spinning clothes -->
                 <g class="drum-spin2" clip-path="url(#drumClip)">
-                    <!-- Shirt -->
-                    <ellipse cx="62" cy="90" rx="14" ry="9" fill="#F472B6" opacity="0.95" transform="rotate(15 62 90)"/>
-                    <rect x="56" y="87" width="12" height="8" rx="3" fill="#F9A8D4" opacity="0.6"/>
-                    <!-- Jeans -->
-                    <ellipse cx="100" cy="95" rx="13" ry="8" fill="#818CF8" opacity="0.95" transform="rotate(-10 100 95)"/>
-                    <!-- Towel -->
-                    <rect x="68" y="118" width="24" height="10" rx="4" fill="#FB923C" opacity="0.9" transform="rotate(8 80 123)"/>
-                    <!-- T-shirt -->
-                    <ellipse cx="72" cy="115" rx="12" ry="7" fill="#4ADE80" opacity="0.95" transform="rotate(-20 72 115)"/>
-                    <!-- Sock -->
-                    <ellipse cx="96" cy="118" rx="8" ry="5" fill="#FCD34D" opacity="0.9" transform="rotate(25 96 118)"/>
+                    <!-- Pink T-shirt: collar + body + sleeves -->
+                    <path d="M50,94 L50,78 L44,74 L44,71 L50,74 L55,77 C57,75 60,74 64,74 C68,74 71,75 73,77 L78,74 L84,71 L84,74 L78,78 L78,94 Z" fill="#F472B6" opacity="0.92"/>
+                    <!-- collar highlight -->
+                    <path d="M55,77 C57,75 60,74 64,74 C68,74 71,75 73,77" fill="none" stroke="#F9A8D4" stroke-width="2" opacity="0.7"/>
+                    <!-- Blue Jeans: waistband + two legs -->
+                    <g transform="translate(88,79)">
+                        <rect x="0" y="0" width="25" height="6" rx="3" fill="#818CF8" opacity="0.95"/>
+                        <rect x="1" y="6" width="11" height="26" rx="5" fill="#818CF8" opacity="0.9"/>
+                        <rect x="13" y="6" width="11" height="26" rx="5" fill="#818CF8" opacity="0.9"/>
+                        <line x1="6.5" y1="9" x2="6.5" y2="30" stroke="rgba(255,255,255,0.25)" stroke-width="1.2"/>
+                        <line x1="18.5" y1="9" x2="18.5" y2="30" stroke="rgba(255,255,255,0.25)" stroke-width="1.2"/>
+                    </g>
+                    <!-- Orange Towel: wavy folded shape -->
+                    <path d="M70,120 Q79,114 88,120 Q97,126 106,120 L106,131 Q97,137 88,131 Q79,125 70,131 Z" fill="#FB923C" opacity="0.9"/>
+                    <!-- Towel stripe detail -->
+                    <line x1="70" y1="125" x2="106" y2="125" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+                    <!-- Green Sock: L-shaped tube -->
+                    <path d="M52,106 C52,104 54,103 56,103 L62,103 C64,103 66,104 66,106 L66,120 L74,120 C76,120 77,122 77,124 C77,126 76,127 74,127 L54,127 C52,127 52,126 52,124 Z" fill="#4ADE80" opacity="0.9"/>
+                    <!-- Sock cuff detail -->
+                    <rect x="52" y="103" width="14" height="5" rx="2.5" fill="#6EF0A2" opacity="0.7"/>
+                    <!-- Yellow cloth / folded handkerchief -->
+                    <rect x="74" y="96" width="18" height="15" rx="4" fill="#FCD34D" opacity="0.88" transform="rotate(18 83 103)"/>
+                    <line x1="76" y1="99" x2="90" y2="99" stroke="rgba(255,255,255,0.25)" stroke-width="1" transform="rotate(18 83 103)"/>
                 </g>
                 <!-- Drum porthole ring -->
                 <circle cx="80" cy="106" r="56" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3"/>
